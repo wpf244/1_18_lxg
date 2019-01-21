@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			{include file="public:email"}
+			<div class="col-sm-9 animated fadeInRight">
+				<div class="mail-box-header">
+					<div class="pull-right tooltip-demo">
+						<a href="{:url('Email/reply',array('id'=>$re['id']))}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="回复"><i
+							 class="fa fa-reply"></i> 回复</a>
+						
+						<a href="javascript:;" onclick="dels({$re.id})" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="删除邮件"><i
+							 class="fa fa-trash-o"></i> </a>
+					</div>
+					<h2>
+						查看邮件
+					</h2>
+					<div class="mail-tools tooltip-demo m-t-md">
+						<h3>
+							<span class="font-noraml">主题： </span>{$re.title}
+						</h3>
+						<h5>
+							<span class="pull-right font-noraml">{$re.time|date="Y-m-d H:i:s",###}</span>
+							<span class="font-noraml">发件人： </span>{$re.u_name}
+						</h5>
+					</div>
+				</div>
+				<div class="mail-box">
+					<div class="mail-body">
+						<!-- 邮件内容 -->
+						{$re.content}
+						<!-- 邮件内容 -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			function dels(id){
+				layer.confirm('你确定删除吗？', {icon: 3}, function(index){
+				layer.close(index);
+				window.location.href="{:url('Email/delete')}?id="+id;
+			  });
+			}
+			</script>
+		<script>
+	$(document).ready(function () {
+		$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green',
+		});
+
+
+		$('.summernote').summernote({
+			lang: 'zh-CN'
+		});
+
+	});
+	var edit = function () {
+		$('.click2edit').summernote({
+			focus: true
+		});
+	};
+	var save = function () {
+		var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+		$('.click2edit').destroy();
+	};
+</script>
+</body>
+
+</html>

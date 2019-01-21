@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>审核状况</h5>
+					</div>
+					<div class="ibox-content">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<td>收款人编号</td>
+										<td>姓名</td>
+										<td>支付宝号</td>
+										<td>微信号</td>
+										<td>手机号</td>
+										<td>金额</td>
+										<td>备注</td>
+										<td>操作</td>
+									</tr>
+								</thead>
+								<tbody>
+								  {volist name="list" id="v"}	
+									<tr>
+										<td>{$v.u_code}</td>
+										<td>{$v.u_name}</td>
+										<td>{$v.u_alipay}</td>
+										<td>{$v.u_wx}</td>
+										<td>{$v.u_phone}</td>
+										<td>{$v.money}</td>
+										<td>第{$v.level}级</td>
+										<td>{if condition="$v.status eq 1"}已审核 {else /}未审核 {/if}</td>
+									</tr>
+								  {/volist}
+								</tbody>
+							</table>
+						{empty name="list"}	
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="col-sm-12">
+										<!-- 无数据时显示 -->
+										<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+									</div>
+								</div>
+							</div>
+						 {/empty}	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

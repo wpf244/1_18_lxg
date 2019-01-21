@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+	<!-- 每个页面都有（除了首页） -->
+{include file="public:nav"}
+	<div class="common_bg" id="common_bg"></div>
+	<!-- 每个页面都有（除了首页） -->
+
+	<section class="webkit_box">
+		<div class="top_box">
+			<a class="top_back" href="javascript:history.back(-1)">
+				<i class="fa fa-reply"></i>
+			</a>
+			<div class="top_txt">申请升级</div>
+			<div class="top_nav_btn" id="nav_btn">
+				<i class="fa fa-navicon"></i>
+			</div>
+		</div>
+		<section class="webkit_content">
+
+				<div class="wrapper wrapper-content">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>升级记录</h5>
+									</div>
+									<div class="ibox-content text-center">
+										<div class="table-responsive">
+											<p class="bg-primary" style="padding:8px;margin-bottom:0;">您的{$cou}个上层分别为</p>
+											<table class="table table-bordered">
+												<tbody>
+												 {volist name="list" key="k" id="v"}	
+													<tr>
+														<td>上{$k}层</td>
+														<td>{$v.le}</td>
+														<td>{$v.level}级</td>
+													</tr>
+												{/volist}
+												</tbody>
+											</table>
+											<p class="bg-primary" style="padding:8px;margin-bottom:0;">升级说明</p>
+											<table class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>您目前的级别为</td>
+														<td>{$reu.level}级</td>
+													</tr>
+													<tr>
+														<td>下一级将升级为</td>
+														<td>{$les}级</td>
+													</tr>
+												</tbody>
+											</table>
+											<p class="" style="padding:8px;margin-bottom:0;">并需要向上层会员<span style="color:red;">{if condition="$aa eq 0"}跨级升级{/if} {$name['le']}</span>，交升级款{$rel.money}元。</p>
+											<div class="ibox float-e-margins">
+												<div class="ibox-content">
+													<div class="col-sm-12">
+														<p class="text-center">
+															<a class="btn btn-success" href="{:url('Apply/save',array('pid'=>$name['id']))}">申请升级</a>
+														</p>
+													</div>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+							</div>			
+						</div>
+					</div>
+		</section>
+		{include file="public:footer"}
+	</section>
+
+</body>
+
+</html>

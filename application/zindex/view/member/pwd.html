@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+	<div class="middle-box text-center loginscreen animated fadeInDown">
+		<div>
+			<form class="m-t" role="form" id="logoForm" method="post" action="{:url('Member/check')}">
+				<div class="form-group">
+					<input type="password" class="form-control" name="u_pwds" placeholder="请输入二级密码" required>
+				</div>
+				<button type="submit" class="btn btn-primary block full-width m-b" id="regist_btn">确定</button>
+			</form>
+		</div>
+	</div>
+
+	<script>
+	$(document).ready(function () {
+		$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green',
+		});
+
+
+		$('.summernote').summernote({
+			lang: 'zh-CN'
+		});
+
+	});
+	var edit = function () {
+		$('.click2edit').summernote({
+			focus: true
+		});
+	};
+	var save = function () {
+		var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+		$('.click2edit').destroy();
+	};
+</script>
+<script>
+		$(function () {
+			$('#logoForm').ajaxForm({
+				beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+				success: complete, // 这是提交后的方法
+				dataType: 'json'
+			});
+	
+			function checkForm() {
+	
+				
+			}
+	
+			function complete(data) {
+				if (data.code == 1) {
+					window.location.href = data.url;
+	
+				} else if(data.code == 2){
+					parent.window.location.href = data.url;
+				}else{
+					layer.alert(data.msg, {
+						icon: 5
+					}, function (index) {
+						layer.close(index);
+						window.location.href = data.url;
+					});
+	
+				}
+			}
+	
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+{include file="public:header"}
+
+<body class="no-skin">
+    <!--头部-->
+    {include file="public:nav"}
+
+    <div class="main-container ace-save-state" id="main-container">
+        <!--菜单-->
+        <script type="text/javascript">
+            try {
+                ace.settings.loadState('main-container')
+            } catch (e) {}
+        </script>
+
+        {include file="public:left"}
+
+        <div class="main-content">
+            <div class="main-content-inner">
+                <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                    <ul class="breadcrumb">
+                        <li>
+                            <i class="ace-icon fa fa-home home-icon"></i>
+                            <a href="{:url('Index/index')}">首页</a>
+                        </li>
+                        <li class="active">添加会员</li>
+                    </ul><!-- /.breadcrumb -->
+
+                </div>
+
+                <div class="page-content">
+
+                    {include file="public:set"}
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <form id="logoForm" class="form-horizontal" action="{:url('Member/save')}" method="post" enctype="multipart/form-data">
+                                    <div class="row">
+                                        <div class="col-sm-7">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header widget-header-flat">
+                                                    <h4 class="widget-title"><i class="ace-icon fa fa-leaf green"></i>会员信息</h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-main">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">推荐人编号</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" id="fid" name="fid"
+                                                                placeholder="请输入上级会员编号，可为空">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">推荐人用户名</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" name="f_name" id="f_name"
+                                                                placeholder="推荐人用户名" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                                <label class="col-sm-2 control-label no-padding-right" for="">加盟等级</label>
+                                                              <div class="col-sm-10">
+                                                                <select class="form-control" name="level" >
+                                                                {volist name="res" id="v"}  
+                                                                  <option value="{$v.lid}">{$v.lname} - {$v.lprice}</option>
+                                                                {/volist}
+                                                                </select>
+                                                              </div> 
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">会员名</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" name="realname" id="u_name"
+                                                                placeholder="请输入会员名" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">会员编号</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" name="u_code" value="{$code}"
+                                                                placeholder="请输入会员编号" required readonly >
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">登录密码</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" name="u_pwd" placeholder="请输入登录密码" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">二级密码</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" placeholder="请输入二级密码" name="u_pwds" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">手机号码</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" placeholder="请输入手机号码" name="u_phone" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">身份证号码</label>
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" type="text" placeholder="请输入身份证号码" name="u_idcode" required>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group form-inline">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">收货地址</label>
+                                                          <div class="col-sm-10">
+                                                            <select class="form-control" style="margin-right:13px;" id="cmbProvince" name="province" >
+                                                            </select>
+                                                            <select class="form-control" style="margin-right:13px;" id="cmbCity" name="city" >
+                                                            </select>
+                                                            <select class="form-control" style="margin-right:13px;" id="cmbArea" name="area" >
+                                                            </select>
+                                                          </div> 
+                                                       </div>
+
+                                                       <div class="form-group">
+                                                        <label class="col-sm-2 control-label no-padding-right" for="">详细收货地址</label>
+                                                        <div class="col-sm-10">
+                                                            <input class="form-control" type="text" placeholder="请输入详细收货地址" name="addr" required>
+                                                        </div>
+                                                    </div>
+
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">空点位</label>
+                                                            <label style="padding-top: 8px">
+                                                                <input name="null_bit" class="ace ace-switch ace-switch-6" type="checkbox"/>
+                                                                <span class="lbl"></span>
+                                                              </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label no-padding-right" for="">开通注册中心</label>
+                                                            <label style="padding-top: 8px">
+                                                                <input name="register" class="ace ace-switch ace-switch-6" type="checkbox"/>
+                                                                <span class="lbl"></span>
+                                                              </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-4 col-md-9">
+                                            <button class="btn btn-info" type="submit">
+                                                <i class="ace-icon fa fa-floppy-o bigger-110"></i>
+                                                保存
+                                            </button>
+                                            <a class="btn" href="{:url('Member/lister')}">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                返回
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- PAGE CONTENT BEGINS -->
+                            </div>
+                            <!-- PAGE CONTENT ENDS -->
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+
+       {include file="public:footer"}
+
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+    </div><!-- /.main-container -->
+
+
+    <script>
+        jQuery(function ($) {
+
+            $("#fid").change(function(){
+            var fid = $("#fid").val();
+            if(fid != ''){
+                $.ajax({
+                type:"post",
+                url:"{:url('Member/find_user')}",
+                data:{fid:fid},
+                dataType:"json",
+                success: function (data) {
+                    if(data == 1){
+                        layer.msg("推荐人不存在");
+                        setTimeout("location.reload()",2000);
+                    }else{
+                      // console.log(data); return ;
+                      //  var data = JSON.parse(data);
+                        $("#f_name").val(data);
+                    }
+                }
+            });
+          } 
+        });
+
+        $("#u_name").change(function(){
+            var u_name = $("#u_name").val();
+            if(u_name != ''){
+                $.ajax({
+                type:"post",
+                url:"{:url('Member/find_users')}",
+                data:{u_name:u_name},
+                dataType:"json",
+                success: function (data) {
+                    if(data == 1){
+                        layer.msg("此会员名已存在");                     
+                    }
+                }
+            });
+          } 
+        });
+
+            $('[data-rel=tooltip]').tooltip();
+
+            $("#hide-option").tooltip({
+                hide: {
+                    effect: "explode",
+                    delay: 250
+                }
+            });
+
+        })
+    </script>
+<script type="text/javascript">  
+    addressInit('cmbProvince', 'cmbCity', 'cmbArea');  
+    </script> 
+
+    <script>
+        $(function () {
+            $('#thumb').ace_file_input({
+                style: 'well',
+                btn_choose: '封面图',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-picture-o',
+                droppable: true,
+                thumbnail: 'fit' //large | fit
+                    //,icon_remove:null//set null, to hide remove/reset button
+                    /**,before_change:function(files, dropped) {
+						//Check an example below
+						//or examples/file-upload.html
+						return true;
+					}*/
+                    /**,before_remove : function() {
+						return true;
+					}*/
+                    ,
+                preview_error: function (filename, error_code) {
+                    //name of the file that failed
+                    //error_code values
+                    //1 = 'FILE_LOAD_FAILED',
+                    //2 = 'IMAGE_LOAD_FAILED',
+                    //3 = 'THUMBNAIL_FAILED'
+                    //alert(error_code);
+                }
+
+            }).on('change', function () {
+                //console.log($(this).data('ace_input_files'));
+                //console.log($(this).data('ace_input_method'));
+            });
+
+            $("#article").ajaxForm({
+                // url: 'links.html',
+                // type: 'post',
+                // success: fun
+            })
+        });
+
+        //响应请求回调
+        function fun() {
+
+        }
+    </script>
+    <script>
+        $(function () {
+            $('#logoForm').ajaxForm({
+                beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+                success: complete, // 这是提交后的方法
+                dataType: 'json'
+            });
+
+            function checkForm() {
+
+
+            }
+
+            function complete(data) {
+                if (data.status == 1) {
+                    layer.alert(data.msg, {
+                        icon: 5
+                    }, function (index) {
+                        layer.close(index);
+                        window.location.href = data.url;
+                    });
+
+                } else {
+                    layer.alert(data.msg, {
+                        icon: 6
+                    }, function (index) {
+                        layer.close(index);
+                        window.location.href = data.url;
+                    });
+
+                }
+            }
+
+        });
+    </script>
+  
+</body>
+
+</html>

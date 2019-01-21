@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>推荐会员管理</h5>
+					</div>
+					<div class="ibox-content">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<td>用户名</td>
+										<td>会员编号</td>
+										<td>申请日期</td>
+										<td>确认日期</td>
+										<td>联系方式</td>
+										<td>操作</td>
+									</tr>
+								</thead>
+								<tbody>
+								 {volist name="res" id="v"}	
+									<tr>
+										<td>{$v.u_name}</td>
+										<td>{$v.u_code}</td>
+										<td>{$v.u_ztime|date="Y-m-d H:i:s",###}</td>
+										<td>{if condition="$v.u_jtime neq ''"}{$v.u_jtime|date="Y-m-d H:i:s",###}{/if}</td>
+										<td><a href="{:url('Team/info',array('id'=>$v['uid']))}">查看</a></td>
+										<td>{if condition="$v.u_status eq 1"}已激活 {else /} <a  onclick="dels({$v.uid})">去激活</a> {/if}</td>
+									</tr>
+								  {/volist}
+								</tbody>
+							</table>
+						 {empty name="res"}	
+							<div class="ibox float-e-margins">
+								<div class="ibox-content">
+									<div class="col-sm-12">
+										<!-- 无数据时显示 -->
+										<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+									</div>
+								</div>
+							</div>
+						{/empty} 	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function dels(id){
+			layer.confirm('你确定激活吗？', {icon: 3}, function(index){
+		    layer.close(index);
+			$.ajax({
+				type:"post",
+				url:"{:url('Member/change')}",
+				data:{id:id},
+				dataType:"text",
+				success:function(re)
+				{
+                   if(re == 1){
+					   layer.msg("注册币不足，请联系系统管理员充值");return false;
+				   }
+				   if(re == 2){
+					   layer.msg("激活成功");location.reload();
+				   }
+				   if(re == 0){
+					location.reload();
+				   }
+				}
+			})
+		  //  window.location.href="__URL__/change/id/"+id;
+		  });
+	    }
+		</script>
+
+</body>
+
+</html>

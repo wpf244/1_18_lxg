@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+	<!-- 每个页面都有（除了首页） -->
+{include file="public:nav"}
+	<div class="common_bg" id="common_bg"></div>
+	<!-- 每个页面都有（除了首页） -->
+
+	<section class="webkit_box">
+
+		<div class="top_box">
+			<a class="top_back" href="javascript:history.back(-1)">
+				<i class="fa fa-reply"></i>
+			</a>
+			<div class="top_txt">升级记录</div>
+			<div class="top_nav_btn" id="nav_btn">
+				<i class="fa fa-navicon"></i>
+			</div>
+		</div>
+		<section class="webkit_content">
+				<div class="wrapper wrapper-content">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>升级记录</h5>
+									</div>
+									<div class="ibox-content">
+										<div class="table-responsive">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<td>用户名</td>
+														<td>会员编号</td>
+														<td>申请日期</td>
+														<td>确认日期</td>
+														<td>金额</td>
+														<td>备注</td>
+														<td>操作</td>
+													</tr>
+												</thead>
+												<tbody>
+												{volist name="list" id="v"} 	
+													<tr>
+														<td>{$v.u_name}</td>
+														<td>{$v.u_code}</td>
+														<td>{$v.time|date="Y-m-d H:i:s",###}</td>
+														<td>{if condition="$v.q_time neq '' "}{$v.q_time|date="Y-m-d H:i:s",###}{/if}</td>
+														<td>{$v.money}</td>
+														<td>第{$v.levels}级</td>
+														<td>{if condition="$v.status eq 1"}已经收款 {else /}<a onclick="change({$v.id},{$v.money})">确认升级</a>{/if}</td>
+													</tr>
+												{/volist}	
+												</tbody>
+											</table>
+										{empty name="list"}	
+											<div class="ibox float-e-margins">
+												<div class="ibox-content">
+													<div class="col-sm-12">
+														<!-- 无数据时显示 -->
+														<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+													</div>
+												</div>
+											</div>
+										{/empty}
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					<script type="text/javascript">
+						function change(id,money){
+							layer.confirm('你确定升级吗？', {icon: 3}, function(index){
+							layer.close(index);
+							$.ajax({
+							type:"post",
+							url:"{:url('Member/changes')}",
+							  data:{id:id,money:money},
+							  datatype:"text",
+							  success:function(re){
+								if(re == 2 || re==1){
+									layer.msg("系统繁忙请稍后再试");
+									location.href="{:url('Member/notes')}";
+								}
+								
+								if(re == 0){
+								  layer.msg("确认成功")
+								  location.href="{:url('Member/notes')}";
+								}
+								if(re == 3){
+								  layer.msg("注册币不足，请联系管理员充值");
+								  return false;
+								}
+							  }
+						  })
+						  });
+						}
+						</script>
+			</section>
+			{include file="public:footer"}
+			</section>
+
+</body>
+
+</html>

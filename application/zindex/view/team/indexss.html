@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+	<div class="wrapper wrapper-content">
+		<div class="row wrapper wrapper-content animated fadeInRight">
+			<div class="col-sm-6">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>团队结构</h5>
+					</div>
+					<div class="ibox float-e-margins">
+						<div class="ibox-content">
+							<div id="treeview1" class="test treeview"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="ibox-title">
+					<h5>当前会员状态信息</h5>
+				</div>
+				<div class="ibox-content">
+					<!-- <p>
+						<a href="#">联系方式</a>
+					</p>
+					<p>会员级别：1</p>
+					<p>1:1</p>
+					<p>2:0</p>
+					<p>3:0</p>
+					<p>4:0</p> -->
+					<div class="table-responsive">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>会员编号</th>
+									<th>电话</th>
+									<th>微信号</th>
+									<th>支付宝</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{$re.u_code}</td>
+									<td>{$re.u_phone}</td>
+									<td>{$re.u_wx}</td>
+									<td>{$re.u_alipay}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="table-responsive">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>会员级别</th>
+									<th>1级下属</th>
+									<th>2级下属</th>
+									<th>3级下属</th>
+									<th>4级下属</th>
+									<th>5级下属</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+								    <td>{$re['level']}</td>
+									<td>{$cou1}</td>
+									<td>{$cou2}</td>
+									<td>{$cou3}</td>
+									<td>{$cou4}</td>
+									<td>{$cou5}</td>
+								
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<p class="text-center">
+					{if condition="$cou1 lt 2"}<a class="btn btn-success" href="{:url('Team/regist',array('uid'=>$re['uid']))}">可注册</a>{/if}
+						<!-- <small>（当前还可注册1人）</small> -->
+					</p>
+					
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<div class="ibox-content">
+					<div class="ibox float-e-margins">
+						<div class="ibox-content">
+							<form role="form" method="POST" action="{:url('Team/index')}" class="form-inline">
+								<div class="form-group">
+									<label for="exampleInputEmail2" style="line-height:34px;margin-bottom:0;">会员系谱图</label>
+									<input type="text" id="exampleInputEmail2" class="form-control" name="u_name">
+								</div>
+								<button class="btn btn-success" type="submit" style="margin-bottom:0;">跳转</button>
+							<!--	<div class="form-group">
+									<label class="col-sm-6 control-label" style="line-height:34px;">显示层数</label>
+
+									<div class="col-sm-6">
+										<select class="form-control m-b" name="account" style="margin-bottom:0;">
+											<option>3</option>
+											<option>4</option>
+											<option>5</option>
+										</select>
+									</div>
+								</div>
+								 <a style="margin-right:10px;" href="javascript:history.go(-1)">Back</a>
+								<a style="margin-right:10px;" href="index.html">Me</a>
+								<a href="javascript:history.go(1)">Next</a> -->
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(function () {
+			var defaultData = [{$arr}];
+			// var defaultData = [{
+			// 	text: '梁颖',
+			// 	href: '#',
+			// 	tags: ['4'],
+			// 	nodes: [{
+			// 			text: '王品',
+			// 			href: '#',
+			// 			tags: ['0'],
+			// 			nodes: [{
+			// 					text: '注册',
+			// 					href: '#',
+			// 					tags: ['0'],
+			// 					nodes: [{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						},
+			// 						{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						}
+			// 					]
+			// 				},
+			// 				{
+			// 					text: '注册',
+			// 					href: '#',
+			// 					tags: ['0'],
+			// 					nodes: [{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						},
+			// 						{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						}
+			// 					]
+			// 				}
+			// 			]
+			// 		},
+			// 		{
+			// 			text: '注册',
+			// 			href: '#',
+			// 			tags: ['0'],
+			// 			nodes: [{
+			// 					text: '空位',
+			// 					href: '#',
+			// 					tags: ['0'],
+			// 					nodes: [{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						},
+			// 						{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						}
+			// 					]
+			// 				},
+			// 				{
+			// 					text: '空位',
+			// 					href: '#',
+			// 					tags: ['0'],
+			// 					nodes: [{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						},
+			// 						{
+			// 							text: '空位',
+			// 							href: '#',
+			// 							tags: ['0'],
+			// 							nodes: [{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								},
+			// 								{
+			// 									text: '空位',
+			// 									href: '#',
+			// 									tags: ['0']
+			// 								}
+			// 							]
+			// 						}
+			// 					]
+			// 				}
+			// 			]
+			// 		}
+			// 	]
+			// }];
+
+			$('#treeview1').treeview({
+				data: defaultData,
+				enableLinks: true
+			});
+		})
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+	<!-- 每个页面都有（除了首页） -->
+{include file="public:nav"}
+	<div class="common_bg" id="common_bg"></div>
+	<!-- 每个页面都有（除了首页） -->
+
+	<section class="webkit_box">
+
+		<div class="top_box">
+			<a class="top_back" href="javascript:history.back(-1)">
+				<i class="fa fa-reply"></i>
+			</a>
+			<div class="top_txt">问题解答</div>
+			<div class="top_nav_btn" id="nav_btn">
+				<i class="fa fa-navicon"></i>
+			</div>
+		</div>
+		<section class="webkit_content">
+			<div class="wrapper wrapper-content">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>问题解答</h5>
+							</div>
+							<div class="ibox-content">
+									{$re.content}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</section>
+			{include file="public:footer"}
+			</section>
+
+</body>
+
+</html>

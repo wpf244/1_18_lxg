@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+	<style>
+		table {
+			border-collapse: collapse;
+			border-spacing: 0;
+		}
+		.b1 {
+			padding-top: 6px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+		}
+
+		table.treeTable {
+			/* width: 100%; */
+			max-width: 1000px;
+			min-width: 750px;
+			margin: 0 auto;
+		}
+
+		table.treeTable td {
+			padding: 4px 0;
+		}
+
+		table.treeTable td .itemBox {
+			width: 86px;
+			padding: 0 1px;
+			margin: auto;
+			line-height: 10px;
+			/* height: 190px; */
+			/* border: 1px solid #d5d5d5; */
+		}
+
+		table.treeTable td .itemBox .infoBox {
+			line-height: 18px;
+			margin-top: 4px;
+			padding: 5px 1px;
+			text-align: center;
+		}
+
+		table.treeTable td .itemBox .infoBox p {
+			margin-bottom: 0;
+			height: 26px;
+			line-height: 26px;
+			border-bottom: 1px solid #cacaca;
+		}
+
+		table.treeTable td .itemBox .infoBox p:last-child {
+			border-bottom: none;
+		}
+
+		table.treeTable td .itemBox .infoBox p a {
+			color: #fff;
+		}
+
+		table.treeTable td .itemBox.none {
+			line-height: 50px;
+			height: 80px;
+		}
+
+		.colstyle {
+			height: 50px;
+			/* background-color: #EFEFEF; */
+			padding: 10px 0;
+		}
+	</style>
+
+
+<body class="gray-bg">
+
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>团队结构</h5>
+					</div>
+					<div class="ibox-content text-center">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<form role="form" method="POST" action="{:url('Team/index')}" class="form-inline" id="myform">
+									<div class="form-group">
+										<label for="exampleInputEmail2" style="line-height:34px;margin-bottom:0;">会员系谱图</label>
+										<input type="text" id="exampleInputEmail2" class="form-control" name="u_name">
+									</div>
+									<button class="btn btn-success" type="submit" style="margin-bottom:0;">跳转</button>
+									<div class="form-group">
+										<label class="col-sm-6 control-label" style="line-height:34px;">显示层数</label>
+
+										<div class="col-sm-6">
+											<select class="form-control m-b" onchange="submitForm();" name="number" style="margin-bottom:0;">
+												<option value="3" {if condition="$number eq 3"}selected{/if} >3</option>
+												<option value="4" {if condition="$number eq 4"}selected{/if} >4</option>
+												<option value="5" {if condition="$number eq 5"}selected{/if} >5</option>
+											</select>
+										</div>
+									</div>
+									<!-- <a style="margin-right:10px;" href="javascript:history.go(-1)">Back</a>
+									<a style="margin-right:10px;" href="{:url('Index/index')}">Me</a>
+									<a href="javascript:history.go(1)">Next</a> -->
+								</form>
+							</div>
+						<script>
+						function submitForm(){
+								var form = document.getElementById("myform");
+								form.submit();
+							}
+						</script>	
+							
+						</div>
+						<div class="table-responsive">
+							<table border="0" cellspacing="0" cellpadding="0" class="treeTable">
+							  {volist name="list" id="v"}	
+								<tbody>
+									<tr class="even">
+										<td colspan="100">
+											<div class="itemBox">
+												<div class="b1">
+													<a href="{:url('Team/index',array('u_name'=>$v['u_name']))}">{$v.u_name}</a>
+													<div class="infoBox" style="background:#1c84c6;color: #fff">
+														<p>会员级别：{$v.level}</p>
+														<p style="white-space: nowrap;">一层：{$v.cou1}</p>
+															 <p style="white-space: nowrap;">二层：{$v.cou2}</p>
+															 <p style="white-space: nowrap;">三层：{$v.cou3}</p>
+															 <p style="white-space: nowrap;">四层：{$v.cou4}</p>
+														
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+                                 
+									<tr>
+											
+										<td colspan="100">
+											<div class="colstyle">
+												<!-- <img src="__HOME__/img/t_tree_bottom_l.jpg">
+												<img src="__HOME__/img/t_tree_line.jpg" width="50%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.jpg"> -->
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										
+									</tr>
+								 	
+									<tr class="even">
+									{volist name="$v['list2']" key="k2" id="v2"}
+									  {if condition="$v2['uid'] neq -1 "}
+									  
+										<td colspan="50">
+											<div class="itemBox">
+												<div class="b1">
+													<a href="{:url('Team/index',array('u_name'=>$v2['u_name']))}">{$v2.u_name}</a>
+													<div class="infoBox" style="background:#1c84c6;color: #fff">
+														<p style="text-align:center;"><a href="{:url('Team/info',array('id'=>$v2['uid']))}">联系方式</a></p>
+														<p>会员级别：{$v2.level}</p>
+														
+													</div>
+												</div>
+											</div>
+										</td>
+									
+									 {else /}
+										<td colspan="50">
+											<div class="itemBox none">
+												<div class="b1"><a href="{:url('Team/regist',array('uid'=>$v['uid']))}"><strong>注冊</strong></a></div>
+											</div>
+										</td>
+									{/if}	
+								{/volist}
+									
+									</tr>
+									
+								 <tr>
+									  
+										<td colspan="50">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="50">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+									</tr>
+									<tr class="even">
+									 {volist name="$v['list2']" id="v2"}
+									   {volist name="$v2['list3']" id="v3"}	
+									   
+									   {if condition="$v2['uid'] eq  -1"}
+										<td colspan="25">
+												<div class="itemBox none">
+													<div class="b1">[空位3]</div>
+												</div>
+											</td>
+											{elseif condition="$v3['uid'] neq  -1"}
+										<td colspan="25">
+											<div class="itemBox">
+												<div class="b1">
+													<a href="{:url('Team/index',array('u_name'=>$v3['u_name']))}">{$v3.u_name}</a>
+													<div class="infoBox" style="background:#1c84c6;color: #fff">
+														<p style="text-align:center;"><a href="{:url('Team/info',array('id'=>$v3['uid']))}">联系方式</a></p>
+														<p>会员级别：{$v3.level}</p>
+											
+													
+													</div>
+												</div>
+											</div>
+										</td>
+										{else /}
+										<td colspan="25">
+											   <div class="itemBox none">
+												   <div class="b1"><a href="{:url('Team/regist',array('uid'=>$v2['uid']))}"><strong>注冊</strong></a></div>
+											   </div>
+										   </td>
+										{/if}
+									
+										
+									
+
+									
+								
+										 {/volist}
+									  {/volist}	
+									</tr>
+								{if condition="$number eq 4 or $number eq 5"}	
+									 <tr>
+										<td colspan="25">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="25">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="25">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="25">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+									</tr>
+									<tr class="even">
+
+											{volist name="$v['list2']" id="v2"}
+											{volist name="$v2['list3']" id="v3"}	
+											{volist name="$v3['list4']" id="v4"}
+											{if condition="$v3['uid'] eq  -1"}
+											<td colspan="12.5">
+													<div class="itemBox none">
+														<div class="b1">[空位4]</div>
+													</div>
+												</td>
+											{elseif condition="$v4['uid'] neq  -1"}
+										   
+											 <td colspan="12.5">
+												 <div class="itemBox">
+													 <div class="b1">
+														 <a href="{:url('Team/index',array('u_name'=>$v4['u_name']))}">{$v4.u_name}</a>
+														 <div class="infoBox" style="background:#1c84c6;color: #fff">
+															 <p style="text-align:center;"><a href="{:url('Team/info',array('id'=>$v4['uid']))}">联系方式</a></p>
+															 <p>会员级别：{$v4.level}</p>
+														
+															 
+														 </div>
+													 </div>
+												 </div>
+											 </td>
+
+											 {else /}
+											 <td colspan="12.5">
+													<div class="itemBox none">
+														<div class="b1"><a href="{:url('Team/regist',array('uid'=>$v3['uid']))}"><strong>注冊</strong></a></div>
+													</div>
+												</td>
+											
+											
+											 {/if}
+										 
+									 {/volist}
+											  {/volist}
+										   {/volist}	
+									</tr>
+									{/if}
+									{if condition="$number eq 5"}	
+									<tr>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+										<td colspan="12.5">
+											<div class="colstyle">
+												<img src="__HOME__/img/t_tree_bottom_l.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_mid.gif">
+												<img src="__HOME__/img/t_tree_line.gif" width="25%" height="30">
+												<img src="__HOME__/img/t_tree_bottom_r.gif">
+											</div>
+										</td>
+									</tr>
+									<tr class="even">
+
+											{volist name="$v['list2']" id="v2"}
+											{volist name="$v2['list3']" id="v3"}	
+											{volist name="$v3['list4']" id="v4"}
+											{volist name="$v4['list5']" id="v5"}
+											{if condition="$v5['uid'] neq  -1"}
+										   
+											 <td colspan="6.25">
+												 <div class="itemBox">
+													 <div class="b1">
+														 <a href="{:url('Team/index',array('u_name'=>$v5['u_name']))}">{$v5.u_name}</a>
+														 <div class="infoBox" style="background:#1c84c6;color: #fff">
+															 <p style="text-align:center;"><a href="{:url('Team/info',array('id'=>$v5['uid']))}">联系方式</a></p>
+															 <p>会员级别：{$v5.level}</p>
+														
+														
+														 </div>
+													 </div>
+												 </div>
+											 </td>
+											
+											 {/if}
+										 
+											 {if condition="$v4['uid'] eq  -1"}
+											 <td colspan="6.25">
+													 <div class="itemBox none">
+														 <div class="b1">[空位4]</div>
+													 </div>
+												 </td>
+										      
+												 {else /}
+												 <td colspan="6.25">
+														<div class="itemBox none">
+															<div class="b1"><a href="{:url('Team/regist',array('uid'=>$v4['uid']))}"><strong>注冊</strong></a></div>
+														</div>
+													</td>
+											 {/if}
+										 
+									 {/volist}
+											  {/volist}
+										   {/volist}	
+										   {/volist}
+									
+									</tr>
+									{/if}
+
+								</tbody>
+								{/volist}
+							</table>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12">
+					{volist name="list" id="v"}	
+				<div class="col-lg-4">
+				
+					<div class="ibox">
+						<div class="ibox-content">
+	<a href="{:url('News/detail',array('nid'=>$v['id']))}" class="btn-link">
+		<h2>
+			{$v.title}
+		</h2>
+	</a>
+	<div class="small m-b-xs">
+		{$v.time|date="Y-m-d",###}
+	</div>
+	<p>
+		{$v.marray}
+	</p>
+</div>
+					</div>
+
+			
+				</div>
+				{/volist}
+				
+					
+				</div>
+				<!-- 分页器 -->
+				<div class="text-center">
+					<div class="btn-group">
+						{$page}
+					</div>
+				</div>
+			</div>
+			{empty name="list"}
+			<div class="col-sm-12">
+				<!-- 无数据时显示 -->
+				<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+			</div>
+			{/empty}
+		</div>
+	</div>
+
+</body>
+
+</html>

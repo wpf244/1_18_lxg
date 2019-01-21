@@ -1,0 +1,18 @@
+<div class="phone_nav_list text-center">
+        <a  {if condition="CONTROLLER_NAME eq 'Index'"} class="phone_nav_item active" {else /} class="phone_nav_item" {/if} href="{:url('Index/index')}">
+            <div><i class="fa fa-home"></i></div>
+            <div>首页</div>
+        </a>
+        <a {if condition="CONTROLLER_NAME eq 'Email'"} class="phone_nav_item active" {else /} class="phone_nav_item" {/if} href="{:url('Email/index')}">
+            <div><i class="fa fa-envelope-o"></i></div>
+            <div>站内信</div>
+        </a>
+        <a {if condition="CONTROLLER_NAME eq 'Apply'"} class="phone_nav_item active" {else /} class="phone_nav_item" {/if} href="{:url('Apply/index')}">
+            <div><i class="fa fa-level-up"></i></div>
+            <div>申请升级</div>
+        </a>
+        <a {if condition="CONTROLLER_NAME eq 'Auditi'"} class="phone_nav_item active" {else /} class="phone_nav_item" {/if} href="{:url('Auditi/index')}">
+            <div><i class="fa fa-search"></i></div>
+            <div>审核状况</div>
+        </a>
+    </div>

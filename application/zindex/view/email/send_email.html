@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			{include file="public:email"}
+			<div class="col-sm-9 animated fadeInRight">
+				<div class="mail-box-header">
+					<h2>
+						发件箱
+					</h2>
+					<div class="mail-tools tooltip-demo m-t-md">
+						<div class="btn-group pull-right">
+							{$page}
+						</div>
+						<button class="btn btn-white btn-sm" onclick="location.reload();" data-toggle="tooltip" data-placement="left" title="刷新邮件列表"><i class="fa fa-refresh"></i>
+							刷新</button>
+						
+						<button class="btn btn-white btn-sm" id="del" data-toggle="tooltip" data-placement="top" title="删除邮件"><i class="fa fa-trash-o"></i>
+						</button>
+					</div>
+				</div>
+				<div class="mail-box">
+
+					<table class="table table-hover table-mail">
+							<thead>
+									<tr>
+									 
+									  <th></th>
+									  <th>收件人</th>
+								   
+									  <th class="hidden-480" >主题</th>
+									
+									  <th class="hidden-480">时间</th>
+									  
+									</tr>
+									</thead>
+						<tbody>
+								{volist name="res" id="v"}	
+								<tr  class="read"  >
+									<td class="check-mail">
+										<input type="checkbox" class="i-checks" value="{$v.id}">
+									</td>
+									<td class="mail-ontact"><a href="{:url('Email/details',array('id'=>$v['id']))}">{$v.p_name}</a>
+									</td>
+									<td class="mail-subject"><a href="{:url('Email/details',array('id'=>$v['id']))}">{$v.title}</a>
+									</td>
+									
+									<td class="mail-date">{$v.time|date="Y-m-d",###}</td>
+								</tr>
+							  {/volist}
+						</tbody>
+					</table>
+					{empty name="res"}
+					<div class="ibox float-e-margins">
+						<div class="ibox-content">
+							<div class="col-sm-12">
+								<!-- 无数据时显示 -->
+								<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+							</div>
+						</div>
+					</div>
+					{/empty}
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+			//全部删除
+			$("#del").click(function(){
+		   var valarr = [];
+		   var checkitem = $(".i-checks:checked")
+		   var len = checkitem.length;
+		   if(len>0){
+			   for(let i = 0; i < len;i++){
+				   valarr.push(checkitem.eq(i).val())
+			   }
+			 layer.confirm('是否删除?',{icon: 3},function (index) {
+			   layer.close(index);
+			   window.location.href="{:url('Email/deletes')}?id="+valarr;
+			 });
+		   }else{
+			 layer.msg("请先选择数据");
+		   }
+		 });
+		   
+		   </script>
+	<script>
+	$(document).ready(function () {
+		$('.i-checks').iCheck({
+			checkboxClass: 'icheckbox_square-green',
+			radioClass: 'iradio_square-green',
+		});
+
+
+		$('.summernote').summernote({
+			lang: 'zh-CN'
+		});
+
+	});
+	var edit = function () {
+		$('.click2edit').summernote({
+			focus: true
+		});
+	};
+	var save = function () {
+		var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+		$('.click2edit').destroy();
+	};
+</script>
+</body>
+
+</html>
