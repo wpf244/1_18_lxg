@@ -1,7 +1,8 @@
 <?php
 namespace app\zadmin\controller;
 
-use app\mobile\Member as Members;
+// use app\mobile\Member as Members;
+use app\zadmin\model\Member as Members;
 
 
 class Member extends BaseAdmin
@@ -55,6 +56,47 @@ class Member extends BaseAdmin
         if($re){
            if($re['is_status'] == 1){
             $data['is_status']=0;
+         
+
+            $res=\db("user")->where("uid=$id")->update($data);
+
+            echo '1';
+           }else{
+            echo '2'; 
+           } 
+            
+            
+        }else{
+            echo '0';
+        }
+    }
+    public function changer()
+    {
+        $id=input('id');
+        $re=db("user")->where("uid=$id")->find();
+        if($re){
+           if($re['register'] == 0){
+            $data['register']=1;
+        
+            $res=\db("user")->where("uid=$id")->update($data);
+
+            echo '1';
+           }else{
+            echo '2'; 
+           } 
+            
+            
+        }else{
+            echo '0';
+        }
+    }
+    public function changers()
+    {
+        $id=input('id');
+        $re=db("user")->where("uid=$id")->find();
+        if($re){
+           if($re['register'] == 1){
+            $data['register']=0;
          
 
             $res=\db("user")->where("uid=$id")->update($data);
@@ -145,7 +187,7 @@ class Member extends BaseAdmin
     public function save()
     {
     //    var_dump(\input('post.'));exit;
-        $pid=input('pid');
+        $fid=input('fid');
         $data=input('post.');
        
         $u_code=input('u_code');
@@ -156,18 +198,22 @@ class Member extends BaseAdmin
             $this->error("此会员编号或手机号码已存在");exit();
         }else{
 
-            if(empty($pid)){
-                $data['pid']=0;
+            if(empty($fid)){
+                $data['fid']=0;
             }else{
-                $re=db("user")->where("u_code='$pid'")->find();
+                $re=db("user")->where("u_code",$fid)->find();
                 if($re){               
-                    $data['pid']=$re['uid'];
+                    $data['fid']=$re['uid'];
+                    $data['f_name']=$re['u_name'];
                     if(empty(input("null_bit"))){
                         //给上级增加推荐奖
                         $member=new Members();
                         $levels=input("level");
-                        $pid=$re['uid'];
-                        $member->add_money($pid,$levels);
+                        $fid=$re['uid'];
+                        //需要增加的金额          
+                        $leagues=db("zx_league")->where("lid",$levels)->find();
+                        $gold=$leagues['lprice'];
+                        $member->add_money($fid,$gold);
                         
     
                     }
@@ -176,22 +222,20 @@ class Member extends BaseAdmin
                     $this->error("推荐人不存在",url('lister'));exit;
                 }
             }
-
+          //  var_dump($fid);exit;
+            $level=\input("level");
+            $league=db("zx_league")->where("lid",$level)->find();
             if(\input('null_bit')){
                 $data['null_bit']=1;
+                $data['gold']=0;
+                $data['most_money']=$league['lprice'];
+            }else{
+                //如果不是空点位增加注册币
+                $data['gold']=$league['lprice'];
+                $data['most_money']=$league['lprice'];
             }
             if(\input('register')){
                 $data['register']=1;
-            }
-            if(empty(input("null_bit"))){
-                //如果不是空点位增加注册币
-                $level=\input("level");
-                $league=db("zx_league")->where("lid",$level)->find();
-                if($league){
-                    $data['gold']=$league['lprice'];
-                    $data['most_money']=$league['lprice'];
-                }
-
             }
 
             $data['u_pwd']=md5(input('u_pwd'));
@@ -208,12 +252,15 @@ class Member extends BaseAdmin
             
             $rea=db("user")->insert($data);
             $id=db("user")->getLastInsID();
-            $datas['uid']=$id;
-            $datas['content']="注册所得";
-            $datas['gold']=$data['gold'];
-            $datas['time']=time();
-            $datas['status']=1;
-            db("zx_gold_log")->insert($datas);
+            if(empty(\input("null_bit"))){
+                $datas['uid']=$id;
+                $datas['content']="注册所得";
+                $datas['gold']=$data['gold'];
+                $datas['time']=time();
+                $datas['status']=1;
+                db("zx_gold_log")->insert($datas);
+            }
+           
 
             if($rea){
                 $this->success("添加成功",url('lister'));
@@ -229,33 +276,7 @@ class Member extends BaseAdmin
         $uid=input('uid');
         $re=db("user")->where("uid=$uid")->find();
         if($re){
-            $pid=input('pid');
-            if(empty($pid)){
-                $data['pid']=0;
-            }else{
-                $re=db("user")->where("u_name='$pid'")->find();
-                if($re){
-                    $data['pid']=$re['uid'];  
-                }else{
-                    $this->error("推荐人不存在",url('lister'));exit;
-                }
-            }
-            if(!empty('u_pwd')){
-                $data['u_pwd']=md5(input('u_pwd'));
-            }
-            if(!empty('u_pwds')){
-                $data['u_pwds']=md5(input('u_pwds'));
-            }
-            $data['u_name']=input('u_name');
-            $data['level']=input('level');
-            $data['u_phone']=input('u_phone');
-            $data['u_wx']=input('u_wx');
-            $data['u_alipay']=input('u_alipay');
-            if(\input('u_status')){
-                $data['u_status']=1;
-            }else{
-                $data['u_status']=$re['u_status'];
-            }
+            $data=input("post.");
             $res=db("user")->where("uid=$uid")->update($data);
             if($res){
                 $this->success("修改成功",url('lister'));
@@ -341,8 +362,10 @@ class Member extends BaseAdmin
     {
         $fid=input('fid');
         $re=db("user")->where("u_code",$fid)->find();
+        
         if($re){
             if($re['is_dell'] == 1){
+                
                 $realname=$re['realname'];
                 echo json_encode($realname);
             }else{
@@ -370,6 +393,69 @@ class Member extends BaseAdmin
         $page=$list->render();
         $this->assign("page",$page);
         return $this->fetch();
+    }
+    public function money()
+    {
+        $id=input("uid");
+        $list=db("zx_bonus_log")->where("uid=$id")->paginate(20);
+        $this->assign("list",$list);
+        $page=$list->render();
+        $this->assign("page",$page);
+        return $this->fetch();
+    }
+    // public function ceshi()
+    // {
+    //     $member= new Members();
+    //     $fid=4;
+    //     $add_money=160;
+    //     $member->add_ach($fid,$add_money);
+    // }
+    public function level()
+    {
+        $uid=input("uid");
+        $re=db("user")->alias("a")->where("uid=$uid")->join("zx_league b","a.level=b.lid")->find();
+        if($re){
+            $level=$re['level'];
+            $res=db("zx_league")->where("lid > $level")->select();
+            $this->assign("re",$re);
+            $this->assign("res",$res);
+            return $this->fetch();
+        }else{
+            $this->redirect("lister");
+        }
+        
+    }
+    public function savel()
+    {
+        $uid=input("uid");
+        $re=db("user")->where("uid=$uid")->find();
+        if($re){
+            $levels=$re['level'];
+             $data['level']=input("level");
+             $level=input("level");
+             $new_league=db("zx_league")->where("lid=$level")->find();
+             $data['most_money']=$new_league['lprice'];
+             $res=db("user")->where("uid=$uid")->update($data);
+             if($res){
+                 //判断是否有上级进行返利
+                 $fid=$re['fid'];
+                 if($fid != 0){
+                     $old_league=db("zx_league")->where("lid=$levels")->find();
+                     $old_money=$old_league['lprice'];
+                     
+                     $new_money=$new_league['lprice'];
+                     $gold=($new_money-$old_money);
+                     
+                     $member=new Members();
+                     $member->add_money($fid,$gold);
+                 }
+                $this->success("升级成功",url('lister'));
+             }else{
+                 $this->error("系统繁忙请稍后再试",url('lister'));
+             }
+        }else{
+            $this->error("非法操作",url('lister'));
+        }
     }
 
 

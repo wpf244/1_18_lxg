@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+{include file="public:header"}
+
+<body class="no-skin">
+<!--头部-->
+{include file="public:nav"}
+
+<div class="main-container ace-save-state" id="main-container">
+  <!--菜单-->
+  <script type="text/javascript">
+  try{ace.settings.loadState('main-container')}catch(e){}
+</script>
+
+{include file="public:left"}
+
+  <div class="main-content">
+    <div class="main-content-inner">
+      <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+          <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="{:url('Index/index')}">首页</a>
+          </li>
+          <li class="active">奖金列表</li>
+        </ul><!-- /.breadcrumb -->
+
+      </div>
+
+      <div class="page-content">
+        {include file="public:set"}
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="col-sm-10 col-sm-offset-1">
+              <div class="page-header">
+                
+              </div>
+              <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>类型</th>                  
+                  <th class="hidden-480">奖金数量</th>
+                 
+                  <th class="hidden-480">时间</th>
+
+                  <th class="hidden-480">备注</th>
+                
+                 
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="v"}
+                <tr class="ace-thumbnails">
+              
+                  <td><span class="badge badge-grey">{$v.id}</span></td>
+                  <td>{if condition="$v.status eq 1"}增加 {else /}减少{/if}</td>
+                  <td>{$v.bonus}</td>
+               
+                  <td>
+                     {$v.time|date="Y-m-d H:i:s",###}
+                  </td>
+
+                  <td>{$v.content}</td>
+                  
+                </tr>
+                {/volist}
+                {empty name="list"}<tr><td colspan="15" class="text-center">暂无数据</td></tr>{/empty}
+                </tbody>
+
+              </table>
+
+              <div class="text-center">
+                  <ul class="pagination" id="result">
+                    {$page}
+                  </ul>
+                </div>
+             
+            </div>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.page-content -->
+    </div>
+  </div><!-- /.main-content -->
+
+{include file="public:footer"}
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+  <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+</a>
+</div><!-- /.main-container -->
+
+
+<script>
+  jQuery(function($) {
+    $('[data-rel=tooltip]').tooltip();
+
+    $( "#hide-option" ).tooltip({
+      hide: {
+        effect: "explode",
+        delay: 250
+      }
+    });
+
+  })
+</script>
+<script type="text/javascript">
+		function dels(id){
+			layer.confirm('你确定删除此会员吗？', {icon: 3}, function(index){
+		    layer.close(index);
+		    $.ajax({
+            type:"post",
+            url:"{:url('Member/delete')}",
+              data:{id:id},
+              datatype:"text",
+              success:function(re){
+                if(re == 2 || re==1){
+                    layer.msg("系统繁忙请稍后再试");
+                    location.href="{:url('Member/lister')}";
+                }
+                
+                if(re == 0){
+                  layer.msg("删除成功")
+                  location.href="{:url('Member/lister')}";
+                }
+              }
+          })
+		  });
+	    }
+
+      function add_integz(id) {
+        layer.prompt({title: '请输入要充值的注册币', formType: 3}, function (text, index) {
+
+            var n = /^[1-9]\d*$/;
+            if (!n.test(text)) {
+                layer.alert('请输入正确的充值积分');
+                return false;
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "__URL__/add_integz",
+                    data: {id: id, integz: text},
+                    datatype: "text",
+                    success: function (re) {
+                        if (re == 1) {
+                            layer.close(index);
+                            layer.msg("充值成功");
+                            location.reload();
+                        } else {
+                            layer.close(index);
+                            layer.msg("系统繁忙，请稍后再试");
+                            location.reload();
+                        }
+
+                    }
+                })
+            }
+        });
+    }
+		</script>
+<script>
+function change(id,status){
+ if(status == 0){
+	layer.confirm('你确定开启此等级吗？', {icon: 3}, function(index){
+		    layer.close(index);
+		    $.ajax({
+            type:"post",
+            url:"{:url('Member/change_league')}",
+              data:{id:id},
+              datatype:"text",
+              success:function(re){
+                if(re == 2 || re==0){
+                    layer.msg("系统繁忙请稍后再试");
+                    setTimeout("location.href=\"{:url('Member/league')}\"",2000)
+                }
+                
+                if(re == 1){
+                  layer.msg("开启成功")
+                  setTimeout("location.href=\"{:url('Member/league')}\"",2000)
+                }
+              }
+          })
+		  });
+ }else{
+  layer.confirm('你确定关闭此等级吗？', {icon: 3}, function(index){
+		    layer.close(index);
+		    $.ajax({
+            type:"post",
+            url:"{:url('Member/change_league')}",
+              data:{id:id},
+              datatype:"text",
+              success:function(re){
+                if(re == 2 || re==0){
+                    layer.msg("系统繁忙请稍后再试");
+                    setTimeout("location.href=\"{:url('Member/league')}\"",2000)
+              
+                }
+                
+                if(re == 1){
+                  layer.msg("关闭成功")
+                  setTimeout("location.href=\"{:url('Member/league')}\"",2000)
+                }
+              }
+          })
+		  });
+ } 
+
+}
+
+</script>
+
+
+  <script>
+  $("#change").click(function(){
+  	$("#sortForm").submit();
+  })
+
+  </script>
+</body>
+</html>
