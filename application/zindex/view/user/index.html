@@ -21,16 +21,28 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<label class="col-sm-2 control-label">姓名</label>
+								<div class="col-sm-10">
+									<input type="text" placeholder="请输入姓名" name="realname" value="{$re.realname}" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
 								<label class="col-sm-2 control-label">登录密码</label>
 								<div class="col-sm-10">
-									<input type="text" placeholder="请输入登录密码6-20位" name="u_pwd" value="" class="form-control">
+									<input type="password" placeholder="请输入登录密码6-20位" name="u_pwd" value="" class="form-control">
 								</div>
 
 							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label">二级密码</label>
 								<div class="col-sm-10">
-									<input type="text" placeholder="请输入二级密码6-20位" name="u_pwds" value="" class="form-control">
+									<input type="password" placeholder="请输入二级密码6-20位" name="u_pwds" value="" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">身份证号</label>
+								<div class="col-sm-10">
+									<input type="text" placeholder="请输入身份证号" name="u_idcode" value="{$re.u_idcode}" class="form-control" required>
 								</div>
 							</div>
 							<div class="form-group">
@@ -51,7 +63,7 @@
 									<input type="text" placeholder="请输入手机号" id="phone" name="u_phone" value="{$re.u_phone}" class="form-control">
 								</div>
 							</div>
-							<div class="form-group">
+							<!-- <div class="form-group">
 								<label class="col-sm-2 control-label">发送验证码</label>
 								<div class="col-sm-2">
 									<input type="text" name="yzm" class="form-control">
@@ -59,7 +71,7 @@
 								<div class="col-sm-2">
 									<input type="button" class="btn btn-success" id="btn" value="发送验证码">
 								</div>
-							</div>
+							</div> -->
 							<div class="hr-line-dashed"></div>
 							<input name="uid" type="hidden" value="{$re.uid}" />
 							<div class="form-group">
@@ -166,10 +178,10 @@
 			});
 	
 			function checkForm() {
-				var yl = $.trim($("input[name=yzm]").val()).length;
-				if(yl != 6){
-				  layer.msg("请输入正确的验证码!");return false;
-				}
+				// var yl = $.trim($("input[name=yzm]").val()).length;
+				// if(yl != 6){
+				//   layer.msg("请输入正确的验证码!");return false;
+				// }
 				if($.trim($("input[name=u_pwd]").val()) != ''){
 					var pwdl = $.trim($("input[name=u_pwd]").val()).length;;
 					if(pwdl < 6 || pwdl >20){

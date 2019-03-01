@@ -1,7 +1,7 @@
 <?php
 namespace app\zadmin\model;
 
-use Think\Model;
+use think\Model;
 
 class Member extends Model
 {

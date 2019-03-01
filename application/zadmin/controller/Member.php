@@ -11,11 +11,30 @@ class Member extends BaseAdmin
     {
         $keywords=input('key');
         
-        $map['u_code|realname']=array('like','%'.$keywords.'%');
+        $map['u_code|realname|u_phone']=array('like','%'.$keywords.'%');
         
         $this->assign("title",$keywords);
 
-        $list=db("user")->alias("a")->where($map)->where("is_dell=1")->join("zx_league b","a.level=b.lid")->order("uid desc")->paginate(10);
+        // $list=db('user')->where($map)->order('uid desc')->paginate(10);
+        // dump($list);die;
+
+        $list=db("user")->alias("a")
+        ->where($map)
+        // ->where("is_dell=1")
+        ->join("zx_league b","a.level=b.lid")
+        ->order(['u_sort'=>'asc','uid'=>'desc'])
+        ->paginate(10);
+        foreach($list as $k=>$v){
+            if($v['pid']){
+                $pid=$v['pid'];
+                $p_user=db('user')->where("uid=$pid")->find();
+                $v['f_name']=$p_user['realname'];
+            }else{
+                $v['f_name']='无推荐人';
+            }
+            $list[$k]=$v;
+        }
+        // dump($list);die;
         $this->assign("list",$list);
       
         $page=$list->render();
@@ -25,10 +44,21 @@ class Member extends BaseAdmin
 
         return $this->fetch();
     }
+
+    public function sort(){
+        $data=input('post.');
+        $lb=db('user');
+        foreach ($data as $id => $sort){
+            $lb->where(array('uid' => $id ))->setField('u_sort' , $sort);
+        }
+        $this->redirect('lister');
+    }
+
     public function change()
     {
         $id=input('id');
         $re=db("user")->where("uid=$id")->find();
+        // dump($re['is_status']);die;
         if($re){
            if($re['is_status'] == 0){
             $data['is_status']=1;
@@ -43,8 +73,6 @@ class Member extends BaseAdmin
            }else{
             echo '2'; 
            } 
-            
-            
         }else{
             echo '0';
         }
@@ -56,7 +84,7 @@ class Member extends BaseAdmin
         if($re){
            if($re['is_status'] == 1){
             $data['is_status']=0;
-         
+        
 
             $res=\db("user")->where("uid=$id")->update($data);
 
@@ -74,9 +102,12 @@ class Member extends BaseAdmin
     {
         $id=input('id');
         $re=db("user")->where("uid=$id")->find();
+        // dump($re['is_dell']);
+        // dump($re['uid']);
+        // die;
         if($re){
-           if($re['register'] == 0){
-            $data['register']=1;
+           if($re['is_dell'] == 0){
+            $data['is_dell']=1;
         
             $res=\db("user")->where("uid=$id")->update($data);
 
@@ -94,9 +125,12 @@ class Member extends BaseAdmin
     {
         $id=input('id');
         $re=db("user")->where("uid=$id")->find();
+        // dump($re['is_dell']);
+        // dump($re['uid']);
+        // die;
         if($re){
-           if($re['register'] == 1){
-            $data['register']=0;
+           if($re['is_dell'] == 1){
+            $data['is_dell']=0;
          
 
             $res=\db("user")->where("uid=$id")->update($data);
@@ -116,9 +150,24 @@ class Member extends BaseAdmin
         $id=input('id');
         $re=db("user")->where("uid=$id")->find();
         if($re){
+            $orderRes = db('order')->where('uid',$id)
+            ->where('type','>',0)
+            ->find();
+            if($orderRes) {
+                return 3;//此用户拥有已付款的订单,不可删除
+            }
+
             $data['pid']=$re['pid'];
             $del=db("user")->where("uid=$id")->delete();
             if($del){
+                db('order')->where('uid',$id)
+                ->delete();
+                db('addr')->where('uid',$id)
+                ->delete();
+                db('cart')->where('uid',$id)
+                ->delete();
+                db('comment')->where('uid',$id)
+                ->delete();
                 $res=db("user")->where("pid=$id")->select();
                 if($res){
                     $resss=db("user")->where("pid=$id")->update($data);
@@ -133,10 +182,10 @@ class Member extends BaseAdmin
     }
     public function modifys()
     {
-        $data=db("user")->field("u_name")->select();
+        $data=db("user")->field("realname")->select();
         $arr=array();
         foreach($data as $v){
-            $arr[]=$v['u_name'];
+            $arr[]=$v['realname'];
         }
         $this->assign("data",json_encode($arr,JSON_UNESCAPED_UNICODE));
         
@@ -204,7 +253,7 @@ class Member extends BaseAdmin
                 $re=db("user")->where("u_code",$fid)->find();
                 if($re){               
                     $data['fid']=$re['uid'];
-                    $data['f_name']=$re['u_name'];
+                    $data['f_name']=$re['realname'];
                     if(empty(input("null_bit"))){
                         //给上级增加推荐奖
                         $member=new Members();
@@ -377,8 +426,8 @@ class Member extends BaseAdmin
     }
     public function find_users()
     {
-        $u_name=input('u_name');
-        $re=db("user")->where("realname",$u_name)->find();
+        $realname=input('realname');
+        $re=db("user")->where("realname",$realname)->find();
         if($re){
             if($re['is_dell'] == 1){
                 echo '1';

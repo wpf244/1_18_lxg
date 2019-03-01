@@ -1,12 +1,12 @@
 <?php
-namespace app\index\controller;
+namespace app\zindex\controller;
 
 class Member extends BaseHome
 {
     public function index()
     {
         $uid=session("userid");
-        $res=db("user")->where("z_id=$uid")->select();
+        $res=db("user")->where("pid=$uid")->select();
         $this->assign("res",$res);
         return $this->fetch();
     }
@@ -20,7 +20,7 @@ class Member extends BaseHome
         if($re){
           
             $data['u_jtime']=\time();
-            $data['u_status']=1;
+            $data['is_status']=1;
             $res=db("user")->where("uid=$id")->update($data);
 
             $datas['u_id']=session("userid");
@@ -28,10 +28,7 @@ class Member extends BaseHome
             $datas['time']=time();
             db("user_log")->insert($datas);
 
-           
-
             echo '2';
-          
            
         }else{
             echo '0';
@@ -77,8 +74,8 @@ class Member extends BaseHome
             }else{
                 echo '1';
             }
-       
-       
+        
+        
     }
     public function pwd()
     {

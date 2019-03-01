@@ -1,5 +1,5 @@
 <?php
-namespace app\mobile\controller;
+namespace app\zmobile\controller;
 
 class Login extends Common
 {
@@ -17,11 +17,13 @@ class Login extends Common
          $pwd=md5(input('post.u_pwd'));
          $re=db("user")->where(array('u_name|u_code|u_phone'=>$u_name,'u_pwd'=>$pwd))->find();
          if($re){
-            if($re['u_status'] == 1){
+            if($re['is_status'] != 1){
+                $this->error('此账号未激活，请联系上级激活',url('Login/index'));
+            }else if($re['is_dell'] != 1) {
+                $this->error('不可登陆,您不是直销用户',url('Login/index'));
+            }else{
                 session('userid',$re['uid']);
                 $this->success('登陆成功 ^_^',url('Index/index'));
-            }else{
-             $this->error('此账号未激活，请联系上级激活',url('Login/index'));
             }
              
          }else{

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+    <!-- 每个页面都有（除了首页） -->
+    {include file="public:nav"}
+    <div class="common_bg" id="common_bg"></div>
+    <!-- 每个页面都有（除了首页） -->
+
+    <section class="webkit_box">
+        <div class="top_box">
+            <a class="top_back" href="javascript:history.back(-1)">
+                <i class="fa fa-reply"></i>
+            </a>
+            <div class="top_txt">货币转换</div>
+            <div class="top_nav_btn" id="nav_btn">
+                <i class="fa fa-navicon"></i>
+            </div>
+        </div>
+        <section class="webkit_content">
+
+            <div class="wrapper wrapper-content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>货币转换</h5>
+                            </div>
+                            <div class="ibox-content text-center">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="2">转出方</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>货币类型</td>
+                                                <td>奖金</td>
+                                            </tr>
+                                            <tr>
+                                                <td>可用余额</td>
+                                                <td>{$user.money}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>转换规则</td>
+                                                <td>一奖金可转换为一注册币，等值等价转换。</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <form action="{:url('index/save_trans')}" method="post" id='logoForm'>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="2">转入方</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>转入金额</td>
+                                                <td><input type="text" name='money'></td>
+                                            </tr>
+                                            <tr>
+                                                <td>货币类型</td>
+                                                <td>注册币</td>
+                                            </tr>
+                                            <tr>
+                                                <td>可用余额</td>
+                                                <td>{$user.gold}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>说明</td>
+                                                <td><input type="text" name='content'></td>
+                                            </tr>
+                                            <tr>
+                                                <td>二级密码</td>
+                                                <td><input type="password" name="pwds" id=""></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <div class="col-sm-12">
+                                                <p class="text-center">
+                                                    <button class="btn btn-success" type="submit">点击转换</button>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <script>
+                $("#btn").click(function () {
+                    $.ajax({
+                        type: "post",
+                        url: "{:url('Apply/change')}",
+                        dataType: "text",
+                        success: function (re) {
+                            if (re == 1) {
+                                location.href = "{:url('Apply/user_apply')}";
+                            } else {
+                                layer.msg("你已经是最高级别了！");
+                                return false;
+                            }
+                        }
+                    })
+                })
+            </script>
+        </section>
+        {include file="public:footer"}
+    </section>
+<script>
+    $(function () {
+        $('#logoForm').ajaxForm({
+            beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+            success: complete, // 这是提交后的方法
+            dataType: 'json'
+        });
+
+        function checkForm() {
+            // var yl = $.trim($("input[name=yzm]").val()).length;
+            // if(yl != 6){
+            //   layer.msg("请输入正确的验证码!");return false;
+            // }
+
+
+        }
+
+        function complete(data) {
+            if (data.code == 1) {
+                layer.alert(data.msg, {
+                    icon: 6
+                }, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+
+            } else {
+                layer.alert(data.msg, {
+                    icon: 5
+                }, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+
+            }
+        }
+
+    });
+</script>
+
+
+</body>
+
+</html>

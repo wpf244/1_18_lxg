@@ -1,5 +1,7 @@
 <?php
-namespace app\index\controller;
+namespace app\zindex\controller;
+
+use app\zadmin\model\Member as Members;
 
 class Team extends BaseHome
 {
@@ -262,10 +264,10 @@ class Team extends BaseHome
                 $list2[]=$arr;
             }
             if(!empty($list2)){
-                 foreach ($list2 as $kk => $vv){
-                     if($vv){
+                foreach ($list2 as $kk => $vv){
+                    if($vv){
                         $list3=db("user")->where("pid={$vv['uid']}")->limit("0,2")->select();
-                     }                    
+                    }                    
                     $cou2+=count($list3);
                               
                      if(empty($list3)){
@@ -312,7 +314,7 @@ class Team extends BaseHome
                     }
                     $list2[$kk]['list3']=$list3;
                  
-                 }
+                }
             }
             $list[$k]['list2']=$list2;
             $list[$k]['cou1']=$cou1;
@@ -327,21 +329,27 @@ class Team extends BaseHome
     }
     public function regist()
     {
-        $re=db("lb")->where("fid=2")->find();
+        $re=db("lb")->where("fid=19")->find();
         $this->assign("re",$re);
-        $uid=input('uid');
+        $uid=session('userid');
         $this->assign("uid",$uid);
         return $this->fetch();
     }
     public function register()
-    {
+    {   
         $uid=input('uid');
         $reu=db("user")->where("uid=$uid")->find();
         if($reu){
             $re=db("lb")->where("fid=3")->find();
             $this->assign("re",$re);
-            $code=time();
-            $u_code=mb_substr($code,-6,6);
+            $level=db('level')->select();
+            $this->assign('level',$level);
+            // $code=time();
+            // $u_code=mb_substr($code,-6,6);
+            $time=time();
+            $codes=mb_substr($time,-6,6);
+            $str=chr(rand(65,90));
+            $u_code=$str.$codes;
             $this->assign("u_code",$u_code);
             $this->assign("reu",$reu);
             return $this->fetch();
@@ -352,51 +360,77 @@ class Team extends BaseHome
         
     }
     public function save()
-    {
-       
+    {   
         $uid=session("userid");
         $reus=db("user")->where("uid=$uid")->find();
-        if($reus['gold']  > 0){
         
-        $pid=input('pid');
-        $re=db("user")->where("u_code=$pid")->find();
-        if($re){
-            $u_name=input('u_name');
-            $u_code=input('u_code');
-            $reu=db("user")->where("u_name='$u_name'")->find();
-            $rec=db("user")->where("u_code='$u_code'")->find();
-            if($reu || $rec){
-                $this->error("此会员名或会员编号已存在",url('index'));exit;
-            }else{
-                $data=array();
-                $data['u_code']=input('u_code');
-                $data['u_name']=input('u_name');
-                $data['u_wx']=input('u_wx');
-                $data['u_alipay']=input('u_alipay');
-                $data['u_phone']=input('u_phone');
-                $data['u_pwd']=md5(input('u_pwd'));
-                $data['u_pwds']=md5(input('u_pwds'));
-                $data['pid']=$re['uid'];
-                $data['level']=1;
-                $data['u_ztime']=time();
-                $data['z_id']=$uid;
-                $rea=db("user")->insert($data);
-                if($rea){
-                    $res=db("user")->where("uid=$uid")->setDec("gold",1);
-                    $this->success("注册成功，快去激活吧",url('index'));
+        if($reus['gold']  > 0){
+            $pid=input('pid');
+            $re=db("user")->where("u_code='$pid'")->find();
+            
+            if($re){
+                $u_name=input('u_name');
+                $u_code=input('u_code');
+                $u_phone=input('u_phone');
+                $reu=db("user")->where("u_name='$u_name'")->find();
+                $rec=db("user")->where("u_code='$u_code'")->find();
+                $rep=db('user')->where("u_phone=$u_phone and u_status=1")->find();
+                if($reu || $rec){
+                    $this->error("此会员名或会员编号已存在",url('Team/regist'));exit;
                 }else{
-                    $this->error("注册失败，请稍后再试",url('index'));
+                    if(!$rep){
+                        $ret=db('user')->where("u_phone=$u_phone and u_status=0")->find();
+                        if(!$ret){
+                            $data=array();
+                            $data['u_code']=input('u_code');
+                            $data['u_name']=input('u_name');
+                            $data['realname']=input('realname');
+                            $data['u_wx']=input('u_wx');
+                            $data['u_alipay']=input('u_alipay');
+                            $data['u_phone']=input('u_phone');
+                            $data['u_pwd']=md5(input('u_pwd'));
+                            $data['u_pwds']=md5(input('u_pwds'));
+                            $data['pid']=$re['uid'];
+                            $data['level']=input('level');
+                            $data['u_ztime']=time();
+                            $data['z_id']=$uid;
+                            $data['is_dell']=1;
+                            $rea=db("user")->insert($data);
+                        }else{
+                            $data['is_dell']=1;
+                            $data['level']=input('level');
+                            $rea=db('user')->where("u_phone=$u_phone")->update($data);
+                        }
+                            if($rea){
+                                $level=input('level');
+                                $gold=db('level')->where('id',$level)->find()['money'];
+                                if($reus['gold']>$gold){
+                                    $res=db("user")->where("uid=$uid")->setDec("gold",$gold);
+                                    $member=new Members();
+                                    $money=db('zx_league')->where("lid={$data['level']}")->find();
+                                    $gold=$money['lprice'];
+                                    $member->add_money($uid,$gold);
+                                    $this->success("注册成功，快去激活吧",url('Member/index'));
+                                }else{
+                                    $this->error("注册币不足，请联系管理员充值");
+                                }
+                            }else{
+                                $this->error("注册失败，请稍后再试",url('Team/regist'));
+                            }
+                        
+                    }else{
+                        $this->error('此用户已是会员,请勿重复注册',url('Team/regist'));
+                    }
+                    
                 }
-
+            }else{
+                $this->error("系统繁忙，请稍后再试",url('Team/regist'));
             }
-
         }else{
-            $this->error("系统繁忙，请稍后再试",url('index'));
+            $this->error("注册币不足，请联系管理员充值");
         }
-     }else{
-        $this->error("注册币不足，请联系管理员充值");
-     }
     }
+    
     public function change()
     {
         $u_name=input('u_name');
@@ -419,12 +453,6 @@ class Team extends BaseHome
         }
         
     }
-
-
-
-
-
-
 
 
 

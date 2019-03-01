@@ -1,5 +1,5 @@
 <?php
-namespace app\mobile\controller;
+namespace app\zmobile\controller;
 
 class Email extends BaseMobile
 {

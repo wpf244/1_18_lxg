@@ -1,5 +1,5 @@
 <?php
-namespace app\index\controller;
+namespace app\zindex\controller;
 
 class Email extends BaseHome
 {

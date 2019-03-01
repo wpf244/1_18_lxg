@@ -2,7 +2,7 @@
 return [
     'view_replace_str'=>[
 
-        '__MOBILE__'         => '/static/mobile',
-        '__ADMIN__'         => '/static/admin',
+        '__MOBILE__'         => '/static/zmobile',
+        '__ADMIN__'         => '/static/zadmin',
     ]
 ];

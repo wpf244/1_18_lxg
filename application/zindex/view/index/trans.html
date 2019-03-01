@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>货币转换</h5>
+                    </div>
+                    <div class="ibox-content text-center">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">转出方</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>货币类型</td>
+                                        <td>奖金</td>
+                                    </tr>
+                                    <tr>
+                                        <td>可用余额</td>
+                                        <td>{$user.money}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>转换规则</td>
+                                        <td>一奖金可转换为一注册币，等值等价转换。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="table-responsive">
+                                <form action="{:url('Index/save_trans')}" method="POST" id='logoForm'>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">转入方</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>转入金额</td>
+                                        <td><input type="text" name='money' id='money'></td>
+                                    </tr>
+                                    <tr>
+                                        <td>货币类型</td>
+                                        <td>注册币</td>
+                                    </tr>
+                                    <tr>
+                                        <td>可用余额</td>
+                                        <td>{$user.gold}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>说明</td>
+                                        <td><input type="text" name='intro' id='intro'></td>
+                                    </tr>
+                                    <tr>
+                                        <td>二级密码</td>
+                                        <td><input type="password" name='pwds'></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="col-sm-12">
+                                        <p class="text-center">
+                                            <button type="submit" class="btn btn-success" id="btn">点击转换</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    $(function () {
+        $('#logoForm').ajaxForm({
+            beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+            success: complete, // 这是提交后的方法
+            dataType: 'json'
+        });
+
+        function checkForm() {
+            // var yl = $.trim($("input[name=yzm]").val()).length;
+            // if(yl != 6){
+            //   layer.msg("请输入正确的验证码!");return false;
+            // }
+            
+
+        }
+
+        function complete(data) {
+            if (data.code == 1) {
+                layer.alert(data.msg, {
+                    icon: 6
+                }, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+
+            } else {
+                layer.alert(data.msg, {
+                    icon: 5
+                }, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+
+            }
+        }
+
+    });
+</script>
+<script>
+    
+    // $("#btn").click(function () {
+        // var money=$('#money').val();
+        // var intro=$('#intro').val();
+        // location.href = "{:url('Index/trans',array('money'))}";
+        // $.ajax({
+        //     type: "post",
+        //     url: "{:url('Apply/change')}",
+        //     dataType: "text",
+        //     success: function (re) {
+        //         if (re == 1) {
+        //             location.href = "{:url('Apply/user_apply')}";
+        //         } else {
+        //             layer.msg("你已经是最高级别了！");
+        //             return false;
+        //         }
+        //     }
+        // })
+    // })
+</script>
+</body>
+
+</html>

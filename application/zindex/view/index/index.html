@@ -15,12 +15,12 @@
 					<!-- <span><img alt="image" class="img-circle" src="img/profile_small.jpg" /></span> -->
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 						<span class="clear">
-							<span class="block m-t-xs"><strong class="font-bold">{$re.u_name}</strong></span>
+							<span class="block m-t-xs"><strong class="font-bold">{$re.realname}</strong></span>
 							<span class="text-muted text-xs block">正式会员</span>
 						</span>
 					</a>
 				</div>
-				<div class="logo-element">金柏丽</div>
+				<div class="logo-element">刘现国</div>
 			</li>
 			<li>
 				<a href="{:url('Index/index')}">
@@ -29,7 +29,7 @@
 				</a>
 			</li>
 			<li>
-				<a class="J_menuItem" href="{:url('User/index')}">
+				<a class="J_menuItem" href="{:url('User/user')}">
 					<i class="fa fa-wrench"></i>
 					<span class="nav-label">个人资料</span>
 				</a>
@@ -37,25 +37,20 @@
 			<li>
 				<a class="J_menuItem" href="{:url('News/index')}">
 					<i class="fa fa-bullhorn"></i>
-					<span class="nav-label">联盟公告</span>
+					<span class="nav-label">新闻中心</span>
 				</a>
 			</li>
-			<li>
-				<a class="J_menuItem" href="{:url('Game/index')}">
-					<i class="fa fa-rocket"></i>
-					<span class="nav-label">游戏规则</span>
-				</a>
-			</li>
-			<li>
+			 
+			<!--<li>
 				<a class="J_menuItem" href="{:url('Problem/index')}">
 					<i class="fa fa-question-circle"></i>
 					<span class="nav-label">问题解答 </span>
 				</a>
-			</li>
+			</li> -->
 			<li>
-				<a class="J_menuItem" href="{:url('Team/index')}">
+				<a class="J_menuItem" href="{:url('Team/regist')}">
 					<i class="fa fa-users"></i>
-					<span class="nav-label">团队结构</span>
+					<span class="nav-label">我要注册</span>
 				</a>
 			</li>
 			<li>
@@ -95,6 +90,12 @@
 					<span class="nav-label">注册币转账</span>
 				</a>
 			</li>
+			<li>
+				<a class="J_menuItem" href="{:url('Index/trans')}">
+					<i class="fa fa-refresh"></i>
+					<span class="nav-label">货币转换</span>
+				</a>
+			</li>
 			<!-- <li>
 				<a class="J_menuItem" href="{:url('Index/phone')}">
 					<i class="fa fa-money"></i>
@@ -128,7 +129,7 @@
 				</button>
 				<nav class="page-tabs J_menuTabs">
 					<div class="page-tabs-content">
-						<a href="javascript:;" class="active J_menuTab" data-id="{:url('Index/hello')}">首页</a>
+						<a href="javascript:;" class="active J_menuTab" data-id="{:url('Index/hellow')}">首页</a>
 					</div>
 				</nav>
 				<button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
@@ -136,11 +137,11 @@
 				<a href="{:url('Login/out')}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i>退出登录</a>
 			</div>
 			<div class="row J_mainContent" id="content-main">
-				<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="{:url('Index/hello')}" frameborder="0" data-id="{:url('Index/hello')}"
+				<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="{:url('Index/hellow')}" frameborder="0" data-id="{:url('Index/hellow')}"
 				 seamless></iframe>
 			</div>
 			<div class="footer">
-	<div class="pull-right">&copy; 2016-<span id="lastYear"></span><span style="color:#337ab7;margin-left: 10px;">金柏丽创业联盟平台</span></div>
+	<div class="pull-right">&copy; 2016-<span id="lastYear"></span><span style="color:#337ab7;margin-left: 10px;">刘现国平台</span></div>
 </div>
 		</div>
 		<!--右侧部分结束-->

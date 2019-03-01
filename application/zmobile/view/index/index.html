@@ -1,119 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+  {include file="public:header"}
 
-{include file="public:header"}
-
-<body class="fixed-sidebar full-height-layout gray-bg">
-
-	<section class="webkit_box">
-		<div class="phone_top" style="background-image:url(__MOBILE__/img/person_bg.png)">
-			<a href="{:url('Login/out')}" class="phone_exit"><i class="fa fa fa-sign-out" style="margin-right:6px;"></i>退出系统</a>
-			<div class="phone_infor">
-				<div class="phone_infor_txt">
-					<p>会员编号</p>
-					<p>{$re.u_code}</p>
-				</div>
-				<div class="phone_infor_thumb">
-					<img src="__MOBILE__/img/logo2.png" width="80" height="80" alt="">
-				</div>
-				<div class="phone_infor_txt">
-					<p>注册币</p>
-					<p>{$re.gold}个</p>
-				</div>
-			</div>
-			<p class="phone_nickname text-center">{$re.u_name}</p>
-			<p class="phone_status">
-				<span>会员状态：正式会员</span>
-				<span>会员级别：{$re.level}级</span>
-			</p>
-		</div>
-		<section class="webkit_content">
-			<div class="phone_container">
-				<h5 class="phone_title">
-					团队状态
-				</h5>
-				<div class="phone_unit text-center">
-					<a class="phone_cell" href="{:url('News/index')}">
-						<div><i class="fa fa-bullhorn"></i></div>
-						<div>联盟公告</div>
-					</a>
-					<a class="phone_cell" href="{:url('Team/index')}">
-						<div><i class="fa fa-users"></i></div>
-						<div>团队结构</div>
-					</a>
-					<a class="phone_cell" href="{:url('Problem/index')}">
+  <body class="fixed-sidebar full-height-layout gray-bg">
+    <section class="webkit_box">
+      <div
+        class="phone_top"
+        style="background-image:url(__MOBILE__/img/person_bg.png)"
+      >
+        <a href="{:url('Login/out')}" class="phone_exit"
+          ><i class="fa fa fa-sign-out" style="margin-right:6px;"></i
+          >退出系统</a
+        >
+        <div class="phone_infor">
+          <div class="phone_infor_txt">
+            <p>会员编号</p>
+            <p>{$re.u_code}</p>
+          </div>
+          <div class="phone_infor_thumb">
+            <img src="__MOBILE__/img/logo2.png" width="80" height="80" alt="" />
+          </div>
+          <div class="phone_infor_txt">
+            <p>注册币</p>
+            <p>{$re.gold}个</p>
+          </div>
+        </div>
+        <p class="phone_nickname text-center">{$re.u_name}</p>
+        <p class="phone_status">
+          <span>会员状态：正式会员</span>
+          {if condition="$re.level != ''"}
+          <span>会员级别：{$re.level}级</span>
+          {/if}
+        </p>
+      </div>
+      <section class="webkit_content">
+        <div class="phone_container">
+          <h5 class="phone_title">
+            团队状态
+          </h5>
+          <div class="phone_unit text-center">
+            <a class="phone_cell" href="{:url('News/index')}">
+              <div><i class="fa fa-bullhorn"></i></div>
+              <div>新闻公告</div>
+            </a>
+            <a class="phone_cell" href="{:url('Team/regist')}">
+              <div><i class="fa fa-users"></i></div>
+              <div>我要注册</div>
+            </a>
+            <!-- <a class="phone_cell" href="{//:url('Problem/index')}">
 						<div><i class="fa fa-question-circle"></i></div>
 						<div>问题解答</div>
-					</a>
-					<a class="phone_cell" href="{:url('Game/index')}">
-						<div><i class="fa fa-rocket"></i></div>
-						<div>游戏规则</div>
-					</a>
-					<a class="phone_cell" href="{:url('Index/gold')}">
-						<div><i class="fa fa-money"></i></div>
-						<div>注册币转账</div>
-					</a>
-					<a class="phone_cell" href="{:url('Member/notes')}">
-						<div><i class="fa fa-line-chart"></i></div>
-						<div>升级记录</div>
-					</a>
-					<a class="phone_cell" href="{:url('Member/index')}">
-						<div><i class="fa fa-male"></i></div>
-						<div>会员管理</div>
-					</a>
-					<a class="phone_cell" href="{:url('User/index')}">
-						<div><i class="fa fa-wrench"></i></div>
-						<div>修改资料</div>
-					</a>
-				</div>
-			</div>
-			<div class="phone_container">
-				<h5 class="phone_title">
-					团队升级信息
-				</h5>
-				<div class="col-sm-12">
-					<div class="ibox float-e-margins">
-						<div class="ibox-title">
-							<h5>团队升级信息</h5>
-						</div>
-						<div class="ibox-content">
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<td>用户名</td>
-										<td>升级状态</td>
-									</tr>
-								</thead>
-								<tbody>
+					</a>-->
+            <a class="phone_cell" href="{:url('Index/trans')}">
+              <div><i class="fa fa-rocket"></i></div>
+              <div>货币转换</div>
+            </a>
+            <a class="phone_cell" href="{:url('Index/gold')}">
+              <div><i class="fa fa-money"></i></div>
+              <div>注册币转账</div>
+            </a>
+            <a class="phone_cell" href="{:url('Member/notes')}">
+              <div><i class="fa fa-line-chart"></i></div>
+              <div>升级记录</div>
+            </a>
+            <a class="phone_cell" href="{:url('Member/index')}">
+              <div><i class="fa fa-male"></i></div>
+              <div>会员管理</div>
+            </a>
+            <a class="phone_cell" href="{:url('User/index')}">
+              <div><i class="fa fa-wrench"></i></div>
+              <div>修改资料</div>
+            </a>
+          </div>
+        </div>
+        <div class="phone_container">
+          <h5 class="phone_title">
+            团队升级信息
+          </h5>
+          <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                <h5>团队升级信息</h5>
+              </div>
+              <div class="ibox-content">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <td>用户名</td>
+                      <td>升级状态</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {volist name="apply" id="va"}
+                    <tr>
+                      <?php $vid=$va['u_id']; $user=db("user")->where("uid=$vid")->find();?>
+                      <td>{$user.u_name}</td>
+                      <td>
+                        <a href="{:url('Member/notes')}">
+                          {if condition="$va.status eq 0"}汇款登记 {else
+                          /}已审核 {/if}
+                        </a>
+                      </td>
+                    </tr>
+                    {/volist}
+                  </tbody>
+                </table>
+                <!-- 无数据时显示 -->
+                {empty name="apply"}
+                <p class="text-center common-msg-none" style="color:#ccc;">
+                  暂无数据~
+                </p>
+                {/empty}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-									{volist name="apply" id="va"}
-										<tr>
-											<?php $vid=$va['u_id']; $user=db("user")->where("uid=$vid")->find();?>
-											<td>{$user.u_name}</td>
-											<td>
-												<a href="{:url('Member/notes')}">
-													{if condition="$va.status eq 0"}汇款登记 {else /}已审核 {/if}
-												</a>
-											</td>
-										</tr>
-									{/volist}
-								
-								</tbody>
-							</table>
-							<!-- 无数据时显示 -->
-							{empty name="apply"}
-							<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
-							{/empty}
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		{include file="public:footer"}
-
-	</section>
-
-</body>
-
+      {include file="public:footer"}
+    </section>
+  </body>
 </html>

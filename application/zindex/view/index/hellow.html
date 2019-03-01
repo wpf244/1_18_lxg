@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+<style type="text/css">
+	/*设置表格高宽*/
+	.static_wrap {
+		width: 1000px;
+		height: 500px;
+	}
+</style>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>会员登录信息</h5>
+					</div>
+					{if condition="$re.u_jtime != ''"}
+					<div class="ibox-content">
+						<p>激活时间:{$re.u_jtime|date="Y-m-d H:i:s",###}</p>
+					</div>
+					{/if}
+				</div>
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>会员资料</h5>
+					</div>
+					<div class="ibox-content">
+						<p>会员编号：{$re.u_code}</p>
+						<p>会员昵称：{$re.u_name}</p>
+						<p>会员状态：正式会员</p>
+						{if condition="$re.level != ''"}
+						<p>会员级别：{$re.level}级</p>
+						{/if}
+					</div>
+				</div>
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>团队升级信息</h5>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<td>用户名</td>
+									<td>升级状态</td>
+								</tr>
+							</thead>
+							<tbody>
+								{volist name="apply" id="va"}
+								<tr>
+									<?php $vid=$va['u_id']; $user=db("user")->where("uid=$vid")->find();?>
+									<td>{$user.u_name}</td>
+									<td>
+										<a href="{:url('Member/notes')}">
+											{if condition="$va.status eq 0"}汇款登记 {else /}已审核 {/if}
+										</a>
+									</td>
+								</tr>
+								{/volist}
+							</tbody>
+						</table>
+						<!-- 无数据时显示 -->
+						{empty name="apply"}
+						<p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+						{/empty}
+					</div>
+				</div>
+
+			</div>
+			<div class="col-sm-8">
+			<div class="static_wrap">
+    			<div id="line" style="width:100%;height:100%;"></div>
+			  </div>
+			</div>
+			<!--<div class="col-sm-8">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>联盟公告</h5>
+						<div class="ibox-tools">
+							<a class="close-link" href="{:url('News/index')}">
+								更多
+							</a>
+						</div>
+					</div>
+					<div class="ibox-content no-padding">
+						<ul class="list-group">
+							{volist name="news" id="vs"}
+							<li class="list-group-item">
+								<a href="{:url('News/detail',array('nid'=>$vs['id']))}">
+									<span style="float:right;color:#999;">{$vs.time|date="Y-m-d",###}</span> {$vs.title}
+								</a>
+							</li>
+							{/volist}
+						</ul>
+					</div>
+				</div>
+				 <div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>游戏规则</h5>
+						<div class="ibox-tools">
+							<a class="close-link" href="{:url('Game/index')}">
+								详情
+							</a>
+						</div>
+					</div>
+					<div class="ibox-content">
+						<h2>{$game.title}</h2>
+						{$game.marray}
+					</div>
+				</div> 
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>升级付费信息</h5>
+					</div>
+					<div class="ibox-content">
+						<p>当前等级：{$reu.level}级</p>
+						<p>下一级付费等级：{$les}</p>
+						<p>付费金额：{$rel.money}元</p>
+					</div>
+				</div> 
+			</div>
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>级别详情</h5>
+						<div class="ibox-tools">
+							<a class="close-link" href="{:url('Game/index')}">
+								更多
+							</a>
+						</div>
+					</div>
+					<div class="ibox-content">
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<tbody class=" leave-table">
+									{volist name="level" id="vl"}
+									<tr>
+										<td class="first-table-cell">第{$vl.level}级</td>
+										<td>{$vl.content}</td>
+									</tr>
+									{/volist}
+								</tbody>
+							</table>
+						</div>
+						<p style="padding-left:10%;">
+							{$rea.title}
+							<span style="font-weight:bold;color:red;padding-left: 50%;font-size: 16px;">总回报：{$rea.content}！</span>
+						</p>
+					</div>
+				</div>
+			</div> -->
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>友情链接</h5>
+						</div>
+						<div class="ibox-content">
+
+							{volist name="link" id="vk"}
+							<a class="fancybox" href="{$vk.url}" title="{$vk.name}" target="_blank">
+								<img alt="image" src="{$vk.image}">
+							</a>
+							{/volist}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(function () {
+
+			var init = (function () {
+				var leaveTr = $('.leave-table tr'),
+					leaveTrLen = leaveTr.length
+				leaveTr.each(function (index, element) {
+					var left = (20 + (leaveTrLen - index - 1) * 2) + "%"
+					$(element).children('td:nth-child(2)').css("paddingLeft", left)
+				})
+			})()
+
+		})
+	</script>
+<script type="text/javascript" src="__ZHOME__/js/echarts.min.js"></script>
+<script type="text/javascript">
+	//折线图
+	var line = echarts.init(document.getElementById('line'));
+	line.setOption({
+		color: ["#32d2c9"],
+		title: {
+			x: 'left',
+			text: '奖金结算（元）',
+			textStyle: {
+				fontSize: '18',
+				color: '#4c4c4c',
+				fontWeight: 'bolder'
+			}
+		},
+		tooltip: {
+			trigger: 'axis'
+		},
+		toolbox: {
+			show: true,
+			feature: {
+				dataZoom: {
+					yAxisIndex: 'none'
+				},
+				dataView: {
+					readOnly: false
+				},
+				magicType: {
+					type: ['line', 'bar']
+				}
+			}
+		},
+		xAxis: {
+			type: 'category',
+			boundaryGap: false,
+			data: ['第602期', '第603期', '第604期', '第605期', '第606期', '第607期', '第608期', '第606期', '第607期', '第608期'],
+			axisLabel: {
+				interval: 0
+			}
+		},
+		yAxis: {
+			type: 'value'
+		},
+		series: [{
+			name: '结算金额',
+			type: 'line',
+			data: [0, 5, 2, 3, 4, 7, 9, 3, 9, 8]
+		}]
+	});
+</script>
+
+</body>
+
+</html>

@@ -1,12 +1,12 @@
 <?php
-namespace app\mobile\controller;
+namespace app\zmobile\controller;
 
 class Member extends BaseMobile
 {
     public function index()
     {
         $uid=session("userid");
-        $res=db("user")->where("z_id=$uid")->select();
+        $res=db("user")->where("pid=$uid")->select();
         $this->assign("res",$res);
         return $this->fetch();
     }

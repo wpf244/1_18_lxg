@@ -1,5 +1,5 @@
 <?php
-namespace app\mobile\controller;
+namespace app\zmobile\controller;
 
 class Team extends BaseMobile
 {
@@ -326,7 +326,7 @@ class Team extends BaseMobile
     {
         $re=db("lb")->where("fid=2")->find();
         $this->assign("re",$re);
-        $uid=input('uid');
+        $uid=session('userid');
         $this->assign("uid",$uid);
         return $this->fetch();
     }
@@ -351,49 +351,65 @@ class Team extends BaseMobile
     public function save()
     {
         $uid=session("userid");
-        $reu=db("user")->where("uid=$uid")->find();
-        if($reu['gold']  > 0){
-
-        
-        $pid=input('pid');
-        $re=db("user")->where("u_code=$pid")->find();
-        if($re){
-            $u_name=input('u_name');
-            $u_code=input('u_code');
-            $reu=db("user")->where("u_name='$u_name'")->find();
-            $rec=db("user")->where("u_code='$u_code'")->find();
-            if($reu || $rec){
-                $this->error("此会员名或会员编号已存在",url('index'));exit;
-            }else{
-                $data=array();
-                $data['u_code']=input('u_code');
-                $data['u_name']=input('u_name');
-                $data['u_wx']=input('u_wx');
-                $data['u_alipay']=input('u_alipay');
-                $data['u_phone']=input('u_phone');
-                $data['u_pwd']=md5(input('u_pwd'));
-                $data['u_pwds']=md5(input('u_pwds'));
-                $data['pid']=$re['uid'];
-                $data['level']=1;
-                $data['u_ztime']=time();
-                $data['z_id']=$uid;
-                $rea=db("user")->insert($data);
-                if($rea){
-                    $res=db("user")->where("uid=$uid")->setDec("gold",1);
-                    $this->success("注册成功，快去激活吧",url('index'));
+        $reus=db("user")->where("uid=$uid")->find();
+        if($reus['gold']  > 0){
+            $pid=input('pid');
+            
+            $re=db("user")->where("u_code='$pid'")->find();
+            
+            if($re){
+                $u_name=input('u_name');
+                $u_code=input('u_code');
+                $u_phone=input('u_phone');
+                $reu=db("user")->where("u_name='$u_name'")->find();
+                $rec=db("user")->where("u_code='$u_code'")->find();
+                $rep=db('user')->where("u_phone=$u_phone and u_status=1")->find();
+                
+                if($reu || $rec){
+                    $this->error("此会员名或会员编号已存在",url('Team/regist'));exit;
                 }else{
-                    $this->error("注册失败，请稍后再试",url('index'));
+                    if(!$rep){
+                        $ret=db('user')->where("u_phone=$u_phone and u_status=0")->find();
+                        // echo '<pre>';
+                        // print_r($ret);return ;
+                        if(!$ret){
+                            $data=array();
+                            $data['u_code']=input('u_code');
+                            $data['u_name']=input('u_name');
+                            $data['u_wx']=input('u_wx');
+                            $data['u_alipay']=input('u_alipay');
+                            $data['u_phone']=input('u_phone');
+                            $data['u_pwd']=md5(input('u_pwd'));
+                            $data['u_pwds']=md5(input('u_pwds'));
+                            $data['pid']=$re['uid'];
+                            $data['level']=1;
+                            $data['u_ztime']=time();
+                            $data['pid']=$uid;
+                            $rea=db("user")->insert($data);
+                        }else{
+                            $data['is_dell']=1;
+                            $rea=db('user')->where("u_phone=$u_phone")->update($data);
+                        }
+
+                        if($rea){
+                            $res=db("user")->where("uid=$uid")->setDec("gold",1);
+                            $this->success("注册成功，快去激活吧",url('Member/index'));
+                        }else{
+                            $this->error("注册失败，请稍后再试",url('Team/regist'));
+                        }
+                    }else{
+                        $this->error('此用户已是会员,请勿重复注册',url('Team/regist'));
+                    }
+                    
                 }
-
+            }else{
+                $this->error("系统繁忙，请稍后再试",url('Team/regist'));
             }
-
         }else{
-            $this->error("系统繁忙，请稍后再试",url('index'));
+            $this->error("注册币不足，请联系管理员充值");
         }
-     }else{
-         $this->error("注册币不足，请联系管理员充值");
-     }
     }
+
     public function change()
     {
         $u_name=input('u_name');

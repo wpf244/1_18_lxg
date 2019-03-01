@@ -1,7 +1,8 @@
 <?php
 namespace app\zadmin\controller;
 
-use app\admin\model\News as NewsModel;
+use app\zadmin\model\News as NewsModel;
+
 class News extends BaseAdmin{
     private $model = "";
     public function _initialize(){

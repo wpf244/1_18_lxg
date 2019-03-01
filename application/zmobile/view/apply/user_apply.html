@@ -31,46 +31,43 @@
 									</div>
 									<div class="ibox-content text-center">
 										<div class="table-responsive">
-											<p class="bg-primary" style="padding:8px;margin-bottom:0;">您的{$cou}个上层分别为</p>
-											<table class="table table-bordered">
-												<tbody>
-												 {volist name="list" key="k" id="v"}	
-													<tr>
-														<td>上{$k}层</td>
-														<td>{$v.le}</td>
-														<td>{$v.level}级</td>
-													</tr>
-												{/volist}
-												</tbody>
-											</table>
+											<form action="" method="post" id='logoForm'>
 											<p class="bg-primary" style="padding:8px;margin-bottom:0;">升级说明</p>
 											<table class="table table-bordered">
 												<tbody>
 													<tr>
 														<td>您目前的级别为</td>
-														<td>{$reu.level}级</td>
+														<td>{$user.level}级</td>
 													</tr>
 													<tr>
-														<td>下一级将升级为</td>
-														<td>{$les}级</td>
+														<td>下一级升级为</td>
+														<td><select name="level" id="level" onclick="getMoney({$user.level})">
+															<option value="0">请选择要升的等级</option>
+															<option value="2">2级</option>
+															<option value="3">3级</option>
+															<option value="4">4级</option>
+															<option value="5">5级</option>
+															<option value="6">6级</option>
+															<option value="7">7级</option>
+														</select></td>
 													</tr>
 												</tbody>
 											</table>
-											<p class="" style="padding:8px;margin-bottom:0;">并需要向上层会员<span style="color:red;">{if condition="$aa eq 0"}跨级升级{/if} {$name['le']}</span>，交升级款{$rel.money}元。</p>
+											<p class="" style="padding:8px;margin-bottom:0;">并需要向上层会员交升级款<span id='money' style="color:red;"></span>元。</p>
 											<div class="ibox float-e-margins">
 												<div class="ibox-content">
 													<div class="col-sm-12">
 														<p class="text-center">
-															<a class="btn btn-success" href="{:url('Apply/save',array('pid'=>$name['id']))}">申请升级</a>
+															<button class="btn btn-success" type="submit">申请升级</button>
 														</p>
 													</div>
 												</div>
 											</div>
-										
+											</form>
 										</div>
 									</div>
 								</div>
-							</div>			
+							</div>
 						</div>
 					</div>
 		</section>
@@ -78,5 +75,62 @@
 	</section>
 
 </body>
+<script>
+	function getMoney(level){
+		var level=level;
+		var levels=$('#level').val();
+		$.ajax({
+			type:'post',
+			url:"{:url('apply/getMoney')}",
+			data:{level:level,levels:levels},
+			dataType:'text',
+			success:function(res){
+				
+					$('#money').html(res);
+				
+			}
+		})
+	}
+</script>
+
+<script>
+	$(function () {
+		$('#logoForm').ajaxForm({
+			beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+			success: complete, // 这是提交后的方法
+			dataType: 'json'
+		});
+
+		function checkForm() {
+			// var yl = $.trim($("input[name=yzm]").val()).length;
+			// if(yl != 6){
+			//   layer.msg("请输入正确的验证码!");return false;
+			// }
+
+
+		}
+
+		function complete(data) {
+			if (data.code == 1) {
+				layer.alert(data.msg, {
+					icon: 6
+				}, function (index) {
+					layer.close(index);
+					window.location.href = data.url;
+				});
+
+			} else {
+				layer.alert(data.msg, {
+					icon: 5
+				}, function (index) {
+					layer.close(index);
+					window.location.href = data.url;
+				});
+
+			}
+		}
+
+	});
+</script>
 
 </html>

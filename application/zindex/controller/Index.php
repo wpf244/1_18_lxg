@@ -1,5 +1,5 @@
 <?php
-namespace app\index\controller;
+namespace app\zindex\controller;
 
 
 use think\Request;
@@ -9,22 +9,21 @@ class Index  extends BaseHome
     public function index()
     {
        
-        
-       
         $uid=session('userid');
         $re=db("user")->where("uid=$uid")->find();
         $this->assign("re",$re);
 
         return $this->fetch();
            
-       
-      
     }
-    public function hello()
+    public function hellow()
     {
         //友情链接
-        $link=db("lb")->where("fid=1")->paginate(12);
+        $link=db("lb")->where("fid=18")->paginate(12);
         $this->assign("link",$link);
+
+        // echo '<pre>';
+        // print_r($link);return ;
 
         //用户信息
         $uid=session('userid');
@@ -60,12 +59,16 @@ class Index  extends BaseHome
         //升级信息
         $apply=db("apply")->where(array('p_id'=>$uid))->paginate(3);
         $this->assign("apply",$apply);
+
+        //奖金图表
+        
         return $this->fetch();
     }
     public function gold()
     {
         $uid=session("userid");
-        $res=db("gold")->alias('a')->where("u_id=$uid")->join("user b","a.u_id=b.uid")->select();
+        $res=db("zx_gold_log")->alias('a')->where("a.uid=$uid")->join("user b","a.uid=b.uid")->select();
+        // dump($res);die;
         $this->assign("res",$res);
         return $this->fetch();
     }
@@ -130,4 +133,70 @@ class Index  extends BaseHome
         }
 
     }
+
+    public function trans(){
+        $uid=session("userid");
+        $user=db('user')->where("uid=$uid")->find();
+        $this->assign('user',$user);
+        return $this->fetch();
+    }
+
+    public function save_trans(){
+        $uid=session("userid");
+        $money=input('money');
+        $trans=input('trans');
+        $pwds=input('pwds');
+        $user=db('user')->where("uid=$uid")->find();
+        if($user['u_pwds'] == md5($pwds)){
+            if($money < $user['money']){
+                db('user')->where("uid=$uid")->setDec('money',$money);
+                db('user')->where("uid=$uid")->setInc('gold',$money);
+                $data['uid']=$uid;
+                $data['gold']=$money;
+                $data['content']=$trans;
+                $data['time']=time();
+                $data['status']=0;
+                db('zx_gold_log')->insert($data);
+                $this->success('转换成功!',url('trans'));
+            }else{
+                $this->error('余额不足!',url('trans'));
+            }
+        }else{
+            $this->error('密码输入错误!',url('trans'));
+        }
+    }
+
+    public function pwd() {
+        $uid = session('userid');
+        $this->assign([
+            'uid' => $uid
+        ]);
+        // echo 123;
+        return $this->fetch();
+    }
+
+    public function check()
+    {
+        $uid = input('param.uid');
+        $re=db("user")->where('uid',$uid)->find();
+        // echo '<pre>';
+        // print_r($re);return ;
+        if($re){
+            $u_pwds=\md5(\input('u_pwds'));
+            $pwds=$re['u_pwds'];
+            if($u_pwds == $pwds){
+                session('userid',$uid);
+                \session("pwd",$pwds);
+                $this->success("认证成功",url('index'));
+            }else{
+                $this->error("密码错误",url('pwd'));
+            }
+        }else{
+            return array('code'=>2,'url'=>url('Login/out'));
+            // return $this->redirect(url('login/out'));
+        }
+    }
+
+
+    // ==============================
 }

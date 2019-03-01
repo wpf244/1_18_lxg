@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => '1_18_lxg',
+    'database'        => 'lxg_dd371_com',
     // 用户名
-    'username'        => 'root',
+    'username'        => 'lxg_dd371_com',
     // 密码
-    'password'        => 'root',
+    'password'        => 'SKjbhmfJbx7TyJix',
     // 端口
     'hostport'        => '3306',
     // 连接dsn

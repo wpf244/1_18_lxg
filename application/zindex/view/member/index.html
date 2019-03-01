@@ -33,7 +33,7 @@
 										<td>{$v.u_ztime|date="Y-m-d H:i:s",###}</td>
 										<td>{if condition="$v.u_jtime neq ''"}{$v.u_jtime|date="Y-m-d H:i:s",###}{/if}</td>
 										<td><a href="{:url('Team/info',array('id'=>$v['uid']))}">查看</a></td>
-										<td>{if condition="$v.u_status eq 1"}已激活 {else /} <a  onclick="dels({$v.uid})">去激活</a> {/if}</td>
+										<td>{if condition="$v.is_status eq 1"}已激活 {else /} <a  onclick="dels({$v.uid})">去激活</a> {/if}</td>
 									</tr>
 								  {/volist}
 								</tbody>

@@ -1,14 +1,5 @@
 <?php
-/**
- * Sever.php
- * 朵朵科技
- * 官方网址 www.dd371.com
- * ===============================
- * @uses ECHO
- * @date 2018.11.29
- * @version 1.0
- *
- * **/
+
 namespace app\zadmin\model;
 
 use think\Model;
