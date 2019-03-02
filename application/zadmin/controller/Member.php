@@ -20,20 +20,20 @@ class Member extends BaseAdmin
 
         $list=db("user")->alias("a")
         ->where($map)
-        // ->where("is_dell=1")
+        ->where("is_dell=1")
         ->join("zx_league b","a.level=b.lid")
         ->order(['u_sort'=>'asc','uid'=>'desc'])
         ->paginate(10);
-        foreach($list as $k=>$v){
-            if($v['pid']){
-                $pid=$v['pid'];
-                $p_user=db('user')->where("uid=$pid")->find();
-                $v['f_name']=$p_user['realname'];
-            }else{
-                $v['f_name']='无推荐人';
-            }
-            $list[$k]=$v;
-        }
+        // foreach($list as $k=>$v){
+        //     if($v['pid']){
+        //         $pid=$v['pid'];
+        //         $p_user=db('user')->where("uid=$pid")->find();
+        //         $v['f_name']=$p_user['realname'];
+        //     }else{
+        //         $v['f_name']='无推荐人';
+        //     }
+        //     $list[$k]=$v;
+        // }
         // dump($list);die;
         $this->assign("list",$list);
       
@@ -106,8 +106,8 @@ class Member extends BaseAdmin
         // dump($re['uid']);
         // die;
         if($re){
-           if($re['is_dell'] == 0){
-            $data['is_dell']=1;
+           if($re['register'] == 0){
+            $data['register']=1;
         
             $res=\db("user")->where("uid=$id")->update($data);
 
@@ -129,8 +129,8 @@ class Member extends BaseAdmin
         // dump($re['uid']);
         // die;
         if($re){
-           if($re['is_dell'] == 1){
-            $data['is_dell']=0;
+           if($re['register'] == 1){
+            $data['register']=0;
          
 
             $res=\db("user")->where("uid=$id")->update($data);
@@ -235,10 +235,8 @@ class Member extends BaseAdmin
     }
     public function save()
     {
-    //    var_dump(\input('post.'));exit;
         $fid=input('fid');
-        $data=input('post.');
-       
+        $data=input('post.');      
         $u_code=input('u_code');
         $phone=input("u_phone");
         $reu=db("user")->where("u_code",$u_code)->find();
@@ -246,7 +244,6 @@ class Member extends BaseAdmin
         if($reu || $re_p){
             $this->error("此会员编号或手机号码已存在");exit();
         }else{
-
             if(empty($fid)){
                 $data['fid']=0;
             }else{
@@ -263,15 +260,11 @@ class Member extends BaseAdmin
                         $leagues=db("zx_league")->where("lid",$levels)->find();
                         $gold=$leagues['lprice'];
                         $member->add_money($fid,$gold);
-                        
-    
-                    }
-                  
+                    }          
                 }else{
                     $this->error("推荐人不存在",url('lister'));exit;
                 }
             }
-          //  var_dump($fid);exit;
             $level=\input("level");
             $league=db("zx_league")->where("lid",$level)->find();
             if(\input('null_bit')){
@@ -426,8 +419,8 @@ class Member extends BaseAdmin
     }
     public function find_users()
     {
-        $realname=input('realname');
-        $re=db("user")->where("realname",$realname)->find();
+        $u_name=input('u_name');
+        $re=db("user")->where("realname",$u_name)->find();
         if($re){
             if($re['is_dell'] == 1){
                 echo '1';

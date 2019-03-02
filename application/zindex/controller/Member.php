@@ -6,7 +6,7 @@ class Member extends BaseHome
     public function index()
     {
         $uid=session("userid");
-        $res=db("user")->where("pid=$uid")->select();
+        $res=db("user")->where("fid=$uid")->select();
         $this->assign("res",$res);
         return $this->fetch();
     }
@@ -43,7 +43,7 @@ class Member extends BaseHome
         }else{
 
           $uid=session("userid");
-          $list=db("apply")->alias("a")->where("p_id=$uid")->join("user b","a.u_id=b.uid")->select();
+          $list=db("apply")->alias("a")->field("a.level,a.levels,a.money,a.time,a.status,b.realname,b.u_code,q_time,c.lname,c.lprice")->where("u_id=$uid")->join("user b","a.u_id=b.uid")->join("zx_league c","c.lid = a.levels")->order("a.id desc")->select();
           $this->assign("list",$list);
           return $this->fetch();
         }

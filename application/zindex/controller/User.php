@@ -64,12 +64,12 @@ class User extends BaseHome
                         if(!empty(\input('u_pwds'))){
                             $data['u_pwds']=md5(\input('u_pwds'));
                         }
-                        $data['u_name']=input('u_name');
-                        $data['u_wx']=input('u_wx');
+                       
+                        
                         $data['u_idcode']=input('u_idcode');
                         $data['realname']=input('realname');
                         $data['u_phone']=input('u_phone');
-                        $data['u_alipay']=input('u_alipay');
+                        
 
                         $res=db("user")->where("uid=$uid")->update($data);
                         if($res){

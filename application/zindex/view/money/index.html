@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>财务明细</h5>
+                </div>
+                <div class="ibox-content">
+                    <form role="form" class="form-inline" style="margin-bottom:12px"  >
+                        <div class="form-group">
+                            奖金余额
+                        </div>
+                        <div class="form-group">
+                            {$user.money}
+                        </div>
+                        
+                       
+                        <a class="btn btn-success" href="{:url('money/ti')}" >申请提现</a>
+                        <a class="btn btn-success" href="{:url('Money/mx')}" >提现明细</a>
+                    </form>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                           
+                            <tr>
+                                <td>日期</td>
+                                <td>推荐津贴</td>
+                                <td>管理津贴</td>
+                                <td>服务津贴</td>
+                                <td>重复消费</td>
+                                <td>管理费税</td>
+                                <td>实际到账</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="v"}
+                            <tr>
+                                <td>{$v.number}</td>
+                                <td>{$v.tui_money}</td>
+                                <td>{$v.guan_money}</td>
+                                <td>{$v.fu_money}</td>
+                                <td>{$v.coupon}</td>
+                             
+                                <td>{$v.tax}</td>
+                                <td>{$v.money}</td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                                {$page}
+                              </div>
+                        {empty name="list"}
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="col-sm-12">
+                                    <!-- 无数据时显示 -->
+                                    <p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+                                </div>
+                            </div>
+                        </div>
+                        {/empty}
+                    </div>
+
+                 
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#logoForm').ajaxForm({
+            beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+            success: complete, // 这是提交后的方法
+            dataType: 'json'
+        });
+
+        function checkForm() {
+            if ($.trim($("input[name=money]").val()) < 100) {
+                layer.msg("最低提现金额为100!");
+                return false;
+            }
+        }
+
+        function complete(data) {
+            // console.log(data);
+            if (data.code == 1) {
+                layer.alert(data.msg, {
+                    icon: 6
+                }, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+
+            } else {
+                layer.alert(data.msg, {
+                    icon: 5
+                }, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+
+            }
+        }
+
+    });
+</script>
+</body>
+
+</html>

@@ -22,9 +22,7 @@ class Index  extends BaseHome
         $link=db("lb")->where("fid=18")->paginate(12);
         $this->assign("link",$link);
 
-        // echo '<pre>';
-        // print_r($link);return ;
-
+     
         //用户信息
         $uid=session('userid');
         $re=db("user")->where("uid=$uid")->find();
@@ -61,15 +59,37 @@ class Index  extends BaseHome
         $this->assign("apply",$apply);
 
         //奖金图表
+        $arr=array();
+        $arrs=array();
+        $times=db("zx_money_log")->field("number")->group("number")->order("id desc")->limit("0,10")->select();
+        foreach($times as $v){
+           $arr[]=(string)$v['number'];
+           $money=db("zx_money_log")->field("money")->where(["uid"=>$uid,"number"=>$v['number']])->find();
+           if($money){
+              $arrs[]=$money['money'];
+           }else{
+               $arrs[]=0;
+           }
+        }
+        $times=array_values($arr);
+        $this->assign("times",json_encode($times));
+
+        $money=array_values($arrs);
+        $this->assign("money",json_encode($arrs));
         
         return $this->fetch();
     }
     public function gold()
     {
         $uid=session("userid");
-        $res=db("zx_gold_log")->alias('a')->where("a.uid=$uid")->join("user b","a.uid=b.uid")->select();
-        // dump($res);die;
+        $res=db("gold")->alias('a')->field("a.status,a.money,p_id,u_code,realname,a.time")->where(["u_id"=>$uid,"status"=>0])->join("user b","a.u_id=b.uid")->select();
+        
         $this->assign("res",$res);
+
+        $list=db("gold")->alias('a')->field("a.status,a.money,p_id,u_code,realname,a.time")->where(["u_id"=>$uid,"status"=>1])->join("user b","a.u_id=b.uid")->select();
+        
+        $this->assign("list",$list);
+
         return $this->fetch();
     }
     public function phone()
@@ -106,12 +126,26 @@ class Index  extends BaseHome
                      $data['time']=time();
                      db("gold")->insert($data);
 
+                     $arr['uid']=$uid;
+                     $arr['content']="转赠他人";
+                     $arr['gold']=$gold;
+                     $arr['time']=time();
+                     $arr['status']=0;
+                     db("zx_gold_log")->insert($arr);
+
                      $datas['u_id']=$u_id;
                      $datas['p_id']=$uid;
                      $datas['money']=$gold;
                      $datas['time']=time();
                      $datas['status']=1;
                      db("gold")->insert($datas);
+
+                     $arrs['uid']=$u_id;
+                     $arrs['content']="他人转赠";
+                     $arrs['gold']=$gold;
+                     $arrs['time']=time();
+                     $arrs['status']=1;
+                     db("zx_gold_log")->insert($arrs);
 
                      if($res && $ress){
                          $this->success("赠送成功");
@@ -153,10 +187,18 @@ class Index  extends BaseHome
                 db('user')->where("uid=$uid")->setInc('gold',$money);
                 $data['uid']=$uid;
                 $data['gold']=$money;
-                $data['content']=$trans;
+                $data['content']="奖金转换";
                 $data['time']=time();
-                $data['status']=0;
+                $data['status']=1;
                 db('zx_gold_log')->insert($data);
+                
+                $datas['uid']=$uid;
+                $datas['bonus']=$money;
+                $datas['content']="转换注册币";
+                $datas['time']=time();
+                $datas['status']=0;
+                db('zx_bonus_log')->insert($datas);
+
                 $this->success('转换成功!',url('trans'));
             }else{
                 $this->error('余额不足!',url('trans'));

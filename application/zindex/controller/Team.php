@@ -1,7 +1,7 @@
 <?php
 namespace app\zindex\controller;
 
-use app\zadmin\model\Member as Members;
+use app\zindex\model\Member;
 
 class Team extends BaseHome
 {
@@ -342,7 +342,7 @@ class Team extends BaseHome
         if($reu){
             $re=db("lb")->where("fid=3")->find();
             $this->assign("re",$re);
-            $level=db('level')->select();
+            $level=db('zx_league')->select();
             $this->assign('level',$level);
             // $code=time();
             // $u_code=mb_substr($code,-6,6);
@@ -359,82 +359,119 @@ class Team extends BaseHome
         }
         
     }
+    public function find_user()
+    {
+        $fid=input('fid');
+        $re=db("user")->where("u_code",$fid)->find();
+        
+        if($re){
+            if($re['is_dell'] == 1){
+                
+                $realname=$re['realname'];
+                echo json_encode($realname);
+            }else{
+                echo '1';
+            }
+        }else{
+            echo '1';
+        }
+    }
     public function save()
     {   
         $uid=session("userid");
         $reus=db("user")->where("uid=$uid")->find();
-        
-        if($reus['gold']  > 0){
-            $pid=input('pid');
-            $re=db("user")->where("u_code='$pid'")->find();
-            
-            if($re){
-                $u_name=input('u_name');
-                $u_code=input('u_code');
-                $u_phone=input('u_phone');
-                $reu=db("user")->where("u_name='$u_name'")->find();
-                $rec=db("user")->where("u_code='$u_code'")->find();
-                $rep=db('user')->where("u_phone=$u_phone and u_status=1")->find();
-                if($reu || $rec){
-                    $this->error("此会员名或会员编号已存在",url('Team/regist'));exit;
-                }else{
-                    if(!$rep){
-                        $ret=db('user')->where("u_phone=$u_phone and u_status=0")->find();
-                        if(!$ret){
-                            $data=array();
-                            $data['u_code']=input('u_code');
-                            $data['u_name']=input('u_name');
-                            $data['realname']=input('realname');
-                            $data['u_wx']=input('u_wx');
-                            $data['u_alipay']=input('u_alipay');
-                            $data['u_phone']=input('u_phone');
-                            $data['u_pwd']=md5(input('u_pwd'));
-                            $data['u_pwds']=md5(input('u_pwds'));
-                            $data['pid']=$re['uid'];
-                            $data['level']=input('level');
-                            $data['u_ztime']=time();
-                            $data['z_id']=$uid;
-                            $data['is_dell']=1;
-                            $rea=db("user")->insert($data);
-                        }else{
-                            $data['is_dell']=1;
-                            $data['level']=input('level');
-                            $rea=db('user')->where("u_phone=$u_phone")->update($data);
-                        }
-                            if($rea){
-                                $level=input('level');
-                                $gold=db('level')->where('id',$level)->find()['money'];
-                                if($reus['gold']>$gold){
-                                    $res=db("user")->where("uid=$uid")->setDec("gold",$gold);
-                                    $member=new Members();
-                                    $money=db('zx_league')->where("lid={$data['level']}")->find();
-                                    $gold=$money['lprice'];
-                                    $member->add_money($uid,$gold);
-                                    $this->success("注册成功，快去激活吧",url('Member/index'));
-                                }else{
-                                    $this->error("注册币不足，请联系管理员充值");
-                                }
-                            }else{
-                                $this->error("注册失败，请稍后再试",url('Team/regist'));
-                            }
-                        
-                    }else{
-                        $this->error('此用户已是会员,请勿重复注册',url('Team/regist'));
-                    }
-                    
-                }
+        $gold=$reus['gold'];
+        if($gold > 0){
+            $fid=input('fid');
+            $data=input('post.');      
+            $u_code=input('u_code');
+            $phone=input("u_phone");
+            $reu=db("user")->where("u_code",$u_code)->find();
+            $re_p=db("user")->where("u_phone",$phone)->find();
+            if($reu || $re_p){
+                $this->error("此会员编号或手机号码已存在");exit();
             }else{
-                $this->error("系统繁忙，请稍后再试",url('Team/regist'));
+                $level=\input("level");
+                $league=db("zx_league")->where("lid",$level)->find();
+                $lprice=$league['lprice'];
+               if($gold >= $lprice){
+                    if(empty($fid)){
+                        $data['fid']=0;
+                    }else{
+                        $re=db("user")->where("u_code",$fid)->find();
+                        if($re){               
+                            $data['fid']=$re['uid'];
+                            $data['f_name']=$re['realname'];
+                            
+                            //给上级增加推荐奖
+                            $member=new Member();
+                            $fid=$re['uid'];
+                            //需要增加的金额          
+                            $golds=$league['lprice'];
+                            $member->add_money($fid,$golds);
+                                    
+                        }else{
+                            $this->error("推荐人不存在",url('lister'));exit;
+                        }
+                    }
+                  
+                    $data['gold']=$league['lprice'];
+                    $data['most_money']=$league['lprice']; 
+                    $data['u_pwd']=md5(input('u_pwd'));
+                    $data['u_pwds']=md5(\input('u_pwds'));
+                    $data['u_ztime']=time();
+                    $data['is_dell']=1;
+                    $data['is_status']=1;
+                    $province=\input("province");
+                    $city=\input("city");
+                    $area=\input("area");
+                    $addr=input("addr");
+                    $data['addr']=$province.$city.$area.$addr;
+                
+                    
+                    $rea=db("user")->insert($data);
+                    $id=db("user")->getLastInsID();
+
+                    $datas['uid']=$id;
+                    $datas['content']="注册所得";
+                    $datas['gold']=$data['gold'];
+                    $datas['time']=time();
+                    $datas['status']=1;
+                    db("zx_gold_log")->insert($datas);
+
+                    //扣除用户注册币
+                    db("user")->where("uid",$uid)->setDec("gold",$lprice);
+
+                    $arr['uid']=$uid;
+                    $arr['gold']=$lprice;
+                    $arr['content']="注册会员减少";
+                    $arr['time']=time();
+                    $arr['status']=0;
+                    db("zx_gold_log")->insert($arr);
+                    
+                
+    
+                    if($rea){
+                        $this->success("添加成功");
+                    }else{
+                        $this->error("系统繁忙，请稍后再试");
+                    }
+                }else{
+                    $this->error("注册币不足，请先充值！");
+                }
+                
             }
         }else{
-            $this->error("注册币不足，请联系管理员充值");
+            $this->error("注册币不足，请先充值！");
         }
+
+        
     }
     
     public function change()
     {
         $u_name=input('u_name');
-        $reu=db("user")->where("u_name='$u_name'")->find();
+        $reu=db("user")->where("realname",$u_name)->find();
         if($reu){
             echo '1';
         }else{

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{include file="public:header"}
+
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>提现明细</h5>
+                </div>
+                <div class="ibox-content">
+                      
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                           
+                            <tr>
+                                <td>提现金额</td>
+                                <td>手续费</td>
+                                <td>实到金额</td>
+                                <td>提现方式</td>
+                                <td>账号信息</td>
+                                <td>申请状态</td>
+                                <td>提现时间</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {volist name="list" id="v"}
+                            <tr>
+                                <td>{$v.t_money}</td>
+                                <td>{$v.t_rate}</td>
+                                <td>{$v.t_moneys}</td>
+                                <td>
+                                    {if condition="$v.type eq 0"}银行卡{/if}
+                                    {if condition="$v.type eq 1"}支付宝{/if}
+                                    {if condition="$v.type eq 2"}微信{/if}
+                                </td>
+                                <td>
+
+                                    {$v.card}
+                                </td>
+                                <td>
+                                    {if condition="$v.t_status eq 0"}已提交{/if}
+                                    {if condition="$v.t_status eq 1"}已审核{/if}
+                                    {if condition="$v.t_status eq 2"}已驳回{/if}
+                                </td>
+                             
+                                <td>{$v.t_time|date="Y-m-d H:i:s",###}</td>
+                                
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                                {$page}
+                              </div>
+                        {empty name="list"}
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="col-sm-12">
+                                    <!-- 无数据时显示 -->
+                                    <p class="text-center common-msg-none" style="color:#ccc;">暂无数据~</p>
+                                </div>
+                            </div>
+                        </div>
+                        {/empty}
+                    </div>
+
+                 
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

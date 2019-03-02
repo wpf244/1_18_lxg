@@ -11,16 +11,23 @@ class Apply extends BaseHome
             $this->redirect('pwd');
         }else{
             $uid=session("userid");
-            $reu=db("user")->where("uid=$uid")->find();
-            $this->assign("reu",$reu);
-            if($reu['level'] < 6){
+            $apply=db("apply")->where(["u_id"=>$uid,"status"=>0])->find();
+            if(empty($apply)){
+                $reu=db("user")->where("uid=$uid")->find();
+                $re=db("zx_league")->where("lid",$reu['level'])->find();
+    
+                $this->assign("re",$re);
+                
                 $les=$reu['level']+1;
+                $res=db("zx_league")->where("lid",$les)->find();
+                
+                
+                $this->assign("res",$res);
+              return $this->fetch();
             }else{
-                $les='';
+                $this->redirect('Member/notes');
             }
-            
-            $this->assign("les",$les);
-          return $this->fetch();
+           
         }
     }
     public function pwd()
@@ -51,7 +58,10 @@ class Apply extends BaseHome
         $uid=session("userid");
         $reu=db("user")->where("uid=$uid")->find();
         
-        if($reu['level'] < 6){
+        $les=$reu['level']+1;
+        $res=db("zx_league")->where("lid",$les)->find();
+
+        if($res){
             echo '1';
         }else{
             echo '0';
@@ -59,40 +69,25 @@ class Apply extends BaseHome
     }
     public function user_apply()
     {
-        // echo 123;return ;
+       
         $uid=session("userid");
         $user=db('user')->where("uid=$uid")->find();
-        if(input('post.')){
-            $level=input('level');
-            $res1=db('level')->where("level={$user['level']}")->find();
-            $res2=db('level')->where("level=$level")->find();
-            $data['money']=$res2['money']-$res1['money'];
-            $data['u_id']=$uid;
-            $data['p_id']=$user['pid'];
-            $data['level']=$user['level'];
-            $data['levels']=$level;
-            $data['time']=time();
-            $last=db('apply')->where("u_id=$uid and status=0")->select();
-            if($last){
-                db('apply')->where("u_id=$uid and status=0")->delete();
-            }
-            $re=db('apply')->insert($data);
-            if($re){
-                $this->success('申请成功,请耐心等待审核!',url('index'));
-            }else{
-                $this->error('申请失败,请重新提交!',url('index'));
-            }
-        }
-        $this->assign('user',$user);
-        $this->assign('levels',($user['level']+1));
+
+        $re=db("zx_league")->where("lid",$user['level'])->find();
+        $this->assign("re",$re);
+
+        $res=db("zx_league")->where("lid",">",$user['level'])->select();
+        $this->assign("res",$res);
+     
+        
         return $this->fetch();
     }
 
     public function getMoney(){
         $level=input('level');
         $levels=input('levels');
-        $money=db('level')->where("level=$level")->find()['money'];
-        $moneys=db('level')->where("level=$levels")->find()['money'];
+        $money=db('zx_league')->where("lid=$level")->find()['lprice'];
+        $moneys=db('zx_league')->where("lid=$levels")->find()['lprice'];
         $res=$moneys-$money;
         if($res>0){
             echo $res;
@@ -103,32 +98,42 @@ class Apply extends BaseHome
 
     public function save()
     {
-        $pid=\input('pid');
-        $uid=session('userid');
-        $reu=db("user")->where("uid=$uid")->find();
+        $uid=session("userid");
+        $user=db('user')->where("uid=$uid")->find();
 
-        $les=$reu['level']+1;
-       
-        $level=db("level")->where("level=$les")->find();
+        $level=input('level');
+        $res1=db('zx_league')->where("lid",$user['level'])->find();
+        $res2=db('zx_league')->where("lid",$level)->find();
 
-        $re=db("apply")->where("u_id=$uid and levels=$les and status=0")->find();
-        if($re){
-            db("apply")->where("u_id=$uid and levels=$les and status=0")->delete();
+        $money=$res2['lprice']-$res1['lprice'];
+        $gold=$user['gold'];
+        if($gold >= $money){
+
+            $data['money']=$res2['lprice']-$res1['lprice'];
+            $data['u_id']=$uid;
+            $data['level']=$user['level'];
+            $data['levels']=$level;
+            $data['time']=time();
+            $last=db('apply')->where("u_id=$uid and status=0")->select();
+            if($last){
+                db('apply')->where("u_id=$uid and status=0")->delete();
+            }
+            $re=db('apply')->insert($data);
+            db("user")->where("uid",$uid)->setDec("gold",$money);
+            $arr['uid']=$uid;
+            $arr['content']="升级减少";
+            $arr['gold']=$money;
+            $arr['time']=time();
+            $arr['status']=0;
+            db("zx_gold_log")->insert($arr);
+            if($re){
+                $this->success('申请成功,请耐心等待审核!',url('Member/notes'));
+            }else{
+                $this->error('申请失败,请重新提交!',url('index'));
+            }
+        }else{
+            $this->error("注册币不足",url('index'));
         }
-
-        $data['u_id']=$uid;
-        $data['p_id']=$pid;
-        $data['level']=$reu['level'];
-        $data['levels']=$les;
-        $data['money']=$level['money'];
-        $data['time']=time();
-
-        $rea=db("apply")->insert($data);
-
-        $id=db("apply")->getLastInsID();
-
-        $this->redirect("apply_success",array('id'=>$id));
-
 
     }
     public function apply_success()

@@ -78,7 +78,7 @@
                   <th>申请人</th>              
                   <th class="hidden-480" >当前级别</th>                
                   <th class="hidden-480">申请级别</th>
-                  <th>所需金额</th>
+                  <th>消耗注册币</th>
                   <th>申请时间</th>
                   <th>状态</th>
                   <th>确认人</th>
@@ -93,11 +93,11 @@
                 
                   <td><span class="badge badge-grey">{$v.id}</span></td>
                  <?php $uid=$v['u_id']; $user=db("user")->where("uid=$uid")->find(); ?>
-                  <td>{$user.u_name}</td>
+                  <td>{$user.realname}</td>
+                <?php $level=db("zx_league")->where("lid",$v['level'])->find(); $levels=db("zx_league")->where("lid",$v['levels'])->find(); ?>
+                  <td class="hidden-480">{$level.lname}-{$level.lprice}</td>
                 
-                  <td class="hidden-480">{$v.level}</td>
-                
-                  <td class="hidden-480">{$v.levels}</td>
+                  <td class="hidden-480">{$levels.lname}-{$levels.lprice}</td>
                   <td>
                     {$v.money}
                   </td>
@@ -105,20 +105,27 @@
                     {$v.time|date="Y-m-d H:i:s",###}
                   </td>
                   <td>
-                    {if condition="$v.status eq 1"}已审核 {else /} <span style="color:red;">未审核</span>{/if}
+                    {if condition="$v.status eq 0"}未审核{/if}
+                    {if condition="$v.status eq 1"}已审核{/if}
+                    {if condition="$v.status eq 2"}已驳回{/if}
                   </td>
-                  <?php $pid=$v['p_id']; $users=db("user")->where("uid=$pid")->find(); ?>
-                  <td>{if condition="$users neq '' "}{$users.u_name} {else /} 系统管理员{/if} </td>
+                  
+                  <td>系统管理员</td>
                   <td>{if condition="$v.q_time neq '' "}{$v.q_time|date="Y-m-d H:i:s",###}{/if}</td>
                   <td>
                   {if condition="$v.status eq 0"}   
-                    <a class="btn btn-xs btn-info" onclick="change({$v.id})" title="通过审核">
-                      <i class="ace-icon fa fa-check bigger-120"></i>
+                    <a class="btn btn-xs btn-info" onclick="change({$v.id})" title="通过">
+                      通过
                     </a>
+                    <a class="btn btn-xs btn-danger" onclick="changes({$v.id})" title="驳回">
+                        驳回
+                      </a>
+                      {else /}
+                      <button class="btn btn-xs btn-danger" type="button" onclick="dels({$v.id})" title="删除">
+                          删除
+                        </button>
                    {/if} 
-                    <button class="btn btn-xs btn-danger" type="button" onclick="dels({$v.id})" title="删除">
-                      <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                    </button>
+                   
                   </td>
                 </tr>
                 {/volist}
@@ -172,6 +179,14 @@
 		  });
 	    }
 </script>
+<script>
+    function changes(id){
+        layer.confirm('你确定驳回并退还用户注册币吗？', {icon: 3}, function(index){
+          layer.close(index);
+          window.location.href="__URL__/changes/id/"+id;
+        });
+        }
+  </script>
 
 
   <script>

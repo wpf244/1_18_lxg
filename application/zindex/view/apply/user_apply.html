@@ -11,7 +11,7 @@
               <h5>升级记录</h5>
             </div>
             <div class="ibox-content text-center">
-              <form action="{:url('apply/user_apply')}" method="post" id="logoForm">
+              <form action="{:url('apply/save')}" method="post" id="logoForm">
                 <div class="table-responsive">
                   <p class="bg-primary" style="padding:8px;margin-bottom:0;">
                     升级说明
@@ -20,34 +20,26 @@
                     <tbody>
                       <tr>
                         <td>您目前的级别为</td>
-                        <td>{$user.level}级</td>
+                        <td>{$re.lname} - {$re.lprice}</td>
                       </tr>
                       <tr>
                         <td>下一级升级为</td>
                         <td>
-                          <select
-                            name="level"
-                            id="level"
-                            onclick="getMoney({$user.level})"
-                          >
+
+                          <select name="level" id="level" onclick="getMoney({$re.lid})" required >
                             <option value="0">请选择要升的级别</option>
-                            <option value="2">2级</option>
-                            <option value="3">3级</option>
-                            <option value="4">4级</option>
-                            <option value="5">5级</option>
-                            <option value="6">6级</option>
-                            <option value="7">7级</option>
+                         {notempty name="res"}
+                            {volist name="res" id="v"}
+                            <option value="{$v.lid}">{$v.lname} - {$v.lprice}</option>
+                           {/volist}
+                          {/notempty} 
                           </select>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                   <p class="" style="padding:8px;margin-bottom:0;">
-                    并需要向上层会员交升级款<span
-                      id="money"
-                      style="color:red;"
-                    ></span
-                    >元。
+                    消耗注册币<span  id="money" style="color:red;" >0</span>个。
                   </p>
                   <div class="ibox float-e-margins">
                     <div class="ibox-content">
@@ -88,45 +80,45 @@
   </script>
 
   <script>
-    // $(function() {
-    //   $("#logoForm").ajaxForm({
-    //     beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
-    //     success: complete, // 这是提交后的方法
-    //     dataType: "json"
-    //   });
+    $(function() {
+      $("#logoForm").ajaxForm({
+        beforeSubmit: checkForm, // 此方法主要是提交前执行的方法，根据需要设置
+        success: complete, // 这是提交后的方法
+        dataType: "json"
+      });
 
-    //   function checkForm() {
-    //     // var yl = $.trim($("input[name=yzm]").val()).length;
-    //     // if(yl != 6){
-    //     //   layer.msg("请输入正确的验证码!");return false;
-    //     // }
-    //   }
+      function checkForm() {
+        var level = $("#level").val();
+        if(level == 0){
+          layer.msg("请选择要升级的级别!");return false;
+        }
+      }
 
-    //   function complete(data) {
-    //     if (data.code == 1) {
-    //       layer.alert(
-    //         data.msg,
-    //         {
-    //           icon: 6
-    //         },
-    //         function(index) {
-    //           layer.close(index);
-    //           window.location.href = data.url;
-    //         }
-    //       );
-    //     } else {
-    //       layer.alert(
-    //         data.msg,
-    //         {
-    //           icon: 5
-    //         },
-    //         function(index) {
-    //           layer.close(index);
-    //           window.location.href = data.url;
-    //         }
-    //       );
-    //     }
-    //   }
-    // });
+      function complete(data) {
+        if (data.code == 1) {
+          layer.alert(
+            data.msg,
+            {
+              icon: 6
+            },
+            function(index) {
+              layer.close(index);
+              window.location.href = data.url;
+            }
+          );
+        } else {
+          layer.alert(
+            data.msg,
+            {
+              icon: 5
+            },
+            function(index) {
+              layer.close(index);
+              window.location.href = data.url;
+            }
+          );
+        }
+      }
+    });
   </script>
 </html>

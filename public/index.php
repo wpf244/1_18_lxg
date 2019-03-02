@@ -51,13 +51,7 @@ function checkSubstrs($list,$str){
 $f = strpos($_SERVER['REQUEST_URI'],'zadmin');
 
 if($f === false){
-    if(check_wap()){
-        //echo "wap";
-        define('BIND_MODULE','zmobile');
-    }else{
-        //echo "web";
-        define('BIND_MODULE','zindex');
-    }
+    define('BIND_MODULE','zindex');
 }
 
 // 加载框架引导文件

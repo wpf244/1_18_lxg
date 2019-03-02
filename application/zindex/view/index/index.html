@@ -20,7 +20,7 @@
 						</span>
 					</a>
 				</div>
-				<div class="logo-element">刘现国</div>
+				<div class="logo-element">{$sys.name}</div>
 			</li>
 			<li>
 				<a href="{:url('Index/index')}">
@@ -47,18 +47,20 @@
 					<span class="nav-label">问题解答 </span>
 				</a>
 			</li> -->
+			{if condition="$re.register eq 1"}
 			<li>
 				<a class="J_menuItem" href="{:url('Team/regist')}">
 					<i class="fa fa-users"></i>
-					<span class="nav-label">我要注册</span>
+					<span class="nav-label">注册中心</span>
 				</a>
 			</li>
-			<li>
+			{/if}
+			<!-- <li>
 				<a class="J_menuItem" href="{:url('Auditi/index')}">
 					<i class="fa fa-search"></i>
 					<span class="nav-label">审核状况</span>
 				</a>
-			</li>
+			</li> -->
 			<li>
 				<a class="J_menuItem" href="{:url('Member/index')}">
 					<i class="fa fa-male"></i>
@@ -96,6 +98,12 @@
 					<span class="nav-label">货币转换</span>
 				</a>
 			</li>
+			<li>
+					<a class="J_menuItem" href="{:url('Money/index')}">
+						<i class="fa fa-money"></i>
+						<span class="nav-label">财务明细</span>
+					</a>
+				</li>
 			<!-- <li>
 				<a class="J_menuItem" href="{:url('Index/phone')}">
 					<i class="fa fa-money"></i>
@@ -141,7 +149,7 @@
 				 seamless></iframe>
 			</div>
 			<div class="footer">
-	<div class="pull-right">&copy; 2016-<span id="lastYear"></span><span style="color:#337ab7;margin-left: 10px;">刘现国平台</span></div>
+	<div class="pull-right">&copy; 2019-2020<span id="lastYear"></span><span style="color:#337ab7;margin-left: 10px;">{$sys.name}</span></div>
 </div>
 		</div>
 		<!--右侧部分结束-->

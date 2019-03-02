@@ -40,10 +40,7 @@
                       <a class="btn btn-success btn-white btn-bold" href="{:url('Member/add')}">
                         <i class="ace-icon fa fa-plus icon-only"></i>
                         添加</a>
-                        <button id="change" class="btn btn-warning btn-white btn-bold">
-                          <i class="fa fa-exchange"></i>
-                          排序
-                        </button>
+                       
                     </div>
                     <div class="col-sm-8 clearfix">
                       <form class="form-inline pull-right" action="{:url('Member/lister')}">
@@ -70,7 +67,7 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th class="hidden-480">排序</th>
+                     
                       <th>会员编号</th>
                       <th class="hidden-480">会员名</th>
                       <th class="hidden-480">级别</th>
@@ -90,20 +87,18 @@
                     </tr>
                   </thead>
 
-                  <form id="sortForm" action="__URL__/sort" method="post">
+             
                   <tbody>
                     {volist name="list" id="v"}
                     <tr class="ace-thumbnails">
                       <td><span class="badge badge-grey">{$v.uid}</span></td>
-                      <td class="hidden-480">
-                        <input class="input-small" type="number" name="{$v.uid}" value="{$v.u_sort}">
-                      </td>
+                   
                       <td>{$v.u_code}</td>
                       <td>{$v.realname}</td>
                       <td>{$v.lname}</td>
                       <td class="hidden-480">{$v.u_phone}</td>
 
-                      <td class="hidden-480">{$v['f_name']}</td>
+                      <td class="hidden-480">{$v.f_name}</td>
                       <td>
                         {$v.gold}
                         <a class="btn btn-success btn-white btn-bold" href="javascript:;" onclick="add_integz({$v.uid})">
@@ -120,7 +115,7 @@
                             title="点击关闭">是</a> {else /} <a class="btn btn-xs btn-danger" title="点击激活">否</a>{/if}</div>
                       </td>
                       <td>
-                        <div onclick="changer({$v.uid},{$v.is_dell})"> {if condition="$v.is_dell eq 1" }<a class="btn btn-xs btn-info"
+                        <div onclick="changer({$v.uid},{$v.register})"> {if condition="$v.register eq 1" }<a class="btn btn-xs btn-info"
                             title="点击关闭">是</a> {else /} <a class="btn btn-xs btn-danger" title="点击开通">否</a>{/if}</div>
                       </td>
 
@@ -148,7 +143,7 @@
                       <td colspan="15" class="text-center">暂无数据</td>
                     </tr>{/empty}
                   </tbody>
-                  </form>
+              
                 </table>
                 <div class="text-center">
                   <ul class="pagination" id="result">

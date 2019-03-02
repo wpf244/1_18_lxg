@@ -19,23 +19,27 @@
 									<tr>
 										<td>用户名</td>
 										<td>会员编号</td>
-										<td>申请日期</td>
-										<td>确认日期</td>
-										<td>金额</td>
+										<td>申请时间</td>
+										<td>审核通过时间</td>
+										<td>消耗注册币</td>
 										<td>备注</td>
-										<td>操作</td>
+										<td>状态</td>
 									</tr>
 								</thead>
 								<tbody>
 								{volist name="list" id="v"} 	
 									<tr>
-										<td>{$v.u_name}</td>
+										<td>{$v.realname}</td>
 										<td>{$v.u_code}</td>
 										<td>{$v.time|date="Y-m-d H:i:s",###}</td>
 										<td>{if condition="$v.q_time neq '' "}{$v.q_time|date="Y-m-d H:i:s",###}{/if}</td>
 										<td>{$v.money}</td>
-										<td>第{$v.levels}级</td>
-										<td>{if condition="$v.status eq 1"}已经收款 {else /}<a onclick="change({$v.id},{$v.money})">确认升级</a>{/if}</td>
+										<td>升级到 {$v.lname}-{$v.lprice}</td>
+										<td>
+											{if condition="$v.status eq 0"}待审核{/if}
+											{if condition="$v.status eq 1"}已通过{/if}
+											{if condition="$v.status eq 2"}已驳回{/if}
+										</td>
 									</tr>
 								{/volist}	
 								</tbody>

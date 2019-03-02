@@ -17,7 +17,7 @@ class Login extends Common
          }
          $u_name=input('post.u_name');
          $pwd=md5(input('post.u_pwd'));
-         $re=db("user")->where(array('u_name|u_code|u_phone'=>$u_name,'u_pwd'=>$pwd))->find();
+         $re=db("user")->where(array('realname|u_code|u_phone'=>$u_name,'u_pwd'=>$pwd))->find();
         //  dump($re['is_status']);die;
          if($re){
             if($re['is_status'] != 1){
