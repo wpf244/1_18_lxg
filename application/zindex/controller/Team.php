@@ -448,6 +448,28 @@ class Team extends BaseHome
                     $arr['time']=time();
                     $arr['status']=0;
                     db("zx_gold_log")->insert($arr);
+
+                    $levelu=$reus['level'];
+                    if($levelu == 5){
+                        $moneys=$lprice*0.02;
+                        db("user")->where("uid",$uid)->setInc("money",$moneys);
+                        $arr5['uid']=$uid;
+                        $arr5['content']="县级代理注册补贴";
+                        $arr5['bonus']=$moneys;
+                        $arr5['time']=time();
+                        $arr5['status']=1;
+                        db("zx_bonus_log")->insert($arr5);
+                    }
+                    if($levelu == 6){
+                        $moneys=$lprice*0.03;
+                        db("user")->where("uid",$uid)->setInc("money",$moneys);
+                        $arr6['uid']=$uid;
+                        $arr6['content']="市级代理注册补贴";
+                        $arr6['bonus']=$moneys;
+                        $arr6['time']=time();
+                        $arr6['status']=1;
+                        db("zx_bonus_log")->insert($arr6);
+                    }
                     
                 
     
