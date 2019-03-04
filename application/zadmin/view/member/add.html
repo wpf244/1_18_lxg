@@ -212,7 +212,8 @@
                 dataType:"json",
                 success: function (data) {
                     if(data == 1){
-                        layer.msg("此会员名已存在");                     
+                        layer.msg("此会员名已存在");
+                        $("#u_name").val("");                     
                     }
                 }
             });

@@ -192,7 +192,7 @@ class Member extends Model
                                  //用户增加奖金
                                  $res=db("user")->where("uid=$fid")->setInc("money",$ying_money);
                                  //增加用户奖金日志
-                                 $content="推荐津贴";
+                                 $content="管理津贴";
                                  $this->add_money_log($ying_money,$fid,$content);
                                  //增加重复消费日志
                                  $this->add_copon($add_coupon,$fid);
@@ -204,7 +204,7 @@ class Member extends Model
              
                                   //更新每期日志
                               
-                                 $data['tui_money']=($money_log['tui_money']+$add_moneys);
+                                 $data['guan_money']=($money_log['guan_money']+$add_moneys);
                                  $data['coupon']=($money_log['coupon']+$add_coupon);
                                  $data['tax']=($money_log['tax']+$add_sui);
                                  $data['money']=($money_log['money']+$ying_money);

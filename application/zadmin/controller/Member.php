@@ -316,19 +316,26 @@ class Member extends BaseAdmin
     public function usave()
     {
         $uid=input('uid');
+        $realname=input("realname");
         $re=db("user")->where("uid=$uid")->find();
-        if($re){
-            $data=input("post.");
-            $res=db("user")->where("uid=$uid")->update($data);
-            if($res){
-                $this->success("修改成功",url('lister'));
+        $reu=db("user")->where(["realname"=>$realname,"uid"=>["neq",$uid]])->find();
+        if(empty($reu)){
+            if($re){
+                $data=input("post.");
+                $res=db("user")->where("uid=$uid")->update($data);
+                if($res){
+                    $this->success("修改成功",url('lister'));
+                }else{
+                    $this->error("修改失败",url('lister'));
+                }
+    
             }else{
-                $this->error("修改失败",url('lister'));
+                $this->error("系统繁忙，请稍后再试",url('lister'));
             }
-
         }else{
-            $this->error("系统繁忙，请稍后再试",url('lister'));
+            $this->error("此会员名已存在");
         }
+        
     }
     public function league()
     {
@@ -417,10 +424,22 @@ class Member extends BaseAdmin
             echo '1';
         }
     }
+    
     public function find_users()
     {
         $u_name=input('u_name');
         $re=db("user")->where("realname",$u_name)->find();
+        if($re){
+            if($re['is_dell'] == 1){
+                echo '1';
+            }
+        }
+    }
+    public function finds_users()
+    {
+        $u_name=input('u_name');
+        $uid = input("uid");
+        $re=db("user")->where(["realname"=>$u_name,"uid"=>["neq",$uid]])->find();
         if($re){
             if($re['is_dell'] == 1){
                 echo '1';
